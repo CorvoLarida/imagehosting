@@ -30,7 +30,7 @@ public class PostsController {
     @GetMapping("/posts")
     private String getAllPosts(Model model) {
         model.addAttribute("posts", postRepository.findAll());
-        return "all_posts";
+        return "post/all_posts";
     }
 
     private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
@@ -63,12 +63,12 @@ public class PostsController {
     @GetMapping("/posts/{id}")
     private String getPost(@PathVariable("id") UUID id, Model model) {
         model.addAttribute("post", postRepository.findById(id).orElse(null));
-        return "post";
+        return "post/post";
     }
 
     @GetMapping(value = "/posts/new")
     public String createOne(@ModelAttribute("post") Post post) {
-        return "new_post";
+        return "post/new_post";
     }
 
 }
