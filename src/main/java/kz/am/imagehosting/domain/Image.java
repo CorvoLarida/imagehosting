@@ -2,19 +2,18 @@ package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
 @Entity
+@Table(name = "images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Lob
     @Column(name = "image_location")
+    @Lob
     private String imageLocation;
+    @OneToOne(mappedBy = "image")
+    private Post post;
 
     public Image() {
-    }
-
-    public Image(String imageLocation) {
-        this.imageLocation = imageLocation;
     }
 
     public long getId() {
