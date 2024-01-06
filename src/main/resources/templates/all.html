@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>All</title>
+    <style>
+        img.small {
+            width: 30%;
+            height: 30%;
+        }
+    </style>
 </head>
 <body>
 <h1>TEST CONTROLLER</h1>
@@ -15,7 +21,7 @@
                 <h2>Upload Image Example</h2>
                 <div style="text-align: center;" th:each="image: ${images}">
                     <span>
-                        <img th:src="${'/images/' + image.getImageLocation()}" height="200" width="150"/>
+                        <img class="small" th:src="${'/images/' + image.getImageLocation()}"/>
                     </span>
                 </div>
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>

@@ -1,12 +1,15 @@
 package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
+
+import java.util.UUID;
+
 @Entity
 @Table(name = "images")
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(name = "image_location")
     @Lob
     private String imageLocation;
@@ -16,11 +19,11 @@ public class Image {
     public Image() {
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

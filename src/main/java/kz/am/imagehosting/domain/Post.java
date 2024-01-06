@@ -1,24 +1,28 @@
 package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    @NotNull
     private String postName;
-
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -40,7 +44,6 @@ public class Post {
 
     public String getPhotosImagePath() {
         if (this.image == null || this.id == null) return null;
-
         return this.image.getImageLocation();
     }
 }

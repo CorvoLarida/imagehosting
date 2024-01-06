@@ -1,6 +1,5 @@
 package kz.am.imagehosting.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.repository.ImageRepository;
@@ -8,21 +7,19 @@ import kz.am.imagehosting.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class PostsController {
-    private PostRepository postRepository;
-    private ImageRepository imageRepository;
+    private final PostRepository postRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
     public PostsController(PostRepository postRepository, ImageRepository imageRepository) {
@@ -30,26 +27,22 @@ public class PostsController {
         this.imageRepository = imageRepository;
     }
 
-
-
     @GetMapping("/posts")
     private String getAllPosts(Model model) {
         model.addAttribute("posts", postRepository.findAll());
         return "all_posts";
     }
 
-
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
+    private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
     @PostMapping("/posts")
     public String addOne(@RequestParam("postName") String postName,
-                         @RequestParam("postImage") MultipartFile file,
-                         Model model) {
+                         @RequestParam("postImage") MultipartFile file) {
 
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileNames.append(file.getOriginalFilename());
-
+        System.out.println(fileNames);
         try {
             Files.write(fileNameAndPath, file.getBytes());
         } catch (IOException e) {
@@ -59,11 +52,6 @@ public class PostsController {
         Image uploadedImage = new Image();
         uploadedImage.setImageLocation(fileNames.toString());
         imageRepository.save(uploadedImage);
-//        model.addAttribute("msg", "Uploaded images: " + fileNames);
-//
-//
-//
-//        if (bindingResult.hasErrors()) return "new_post";
         Post post = new Post();
         post.setPostName(postName);
         post.setImage(uploadedImage);
@@ -73,8 +61,8 @@ public class PostsController {
     }
 
     @GetMapping("/posts/{id}")
-    private String getPost(@PathVariable("id") long id, Model model) {
-        model.addAttribute("post", postRepository.findById(id));
+    private String getPost(@PathVariable("id") UUID id, Model model) {
+        model.addAttribute("post", postRepository.findById(id).orElse(null));
         return "post";
     }
 
