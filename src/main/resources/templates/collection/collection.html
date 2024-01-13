@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All</title>
+    <style>
+        img.small {
+            width: 30%;
+            height: 30%;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${'Collection: ' + collection.getPostCollectionName()()}"></h1>
+<div th:each="post: ${collection.getCollectionPosts()}">
+    <a th:href = "@{/posts/{id}(id=${post.getId()})}" th:text="${post.getPostName()}"></a>
+</div>
+
+</body>
+</html>

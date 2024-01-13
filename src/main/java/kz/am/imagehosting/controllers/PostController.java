@@ -17,17 +17,18 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Controller
-public class PostsController {
+@RequestMapping(path="/posts")
+public class PostController {
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
 
     @Autowired
-    public PostsController(PostRepository postRepository, ImageRepository imageRepository) {
+    public PostController(PostRepository postRepository, ImageRepository imageRepository) {
         this.postRepository = postRepository;
         this.imageRepository = imageRepository;
     }
 
-    @GetMapping("/posts")
+    @GetMapping(path="")
     private String getAllPosts(Model model) {
         model.addAttribute("posts", postRepository.findAll());
         return "post/all_posts";
@@ -35,7 +36,7 @@ public class PostsController {
 
     private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
-    @PostMapping("/posts")
+    @PostMapping(path="")
     public String addOne(@RequestParam("postName") String postName,
                          @RequestParam("postImage") MultipartFile file) {
 
@@ -60,14 +61,14 @@ public class PostsController {
         return "redirect:/posts";
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping(path="/{id}")
     private String getPost(@PathVariable("id") UUID id, Model model) {
         model.addAttribute("post", postRepository.findById(id).orElse(null));
         return "post/post";
     }
 
-    @GetMapping(value = "/posts/new")
-    public String createOne(@ModelAttribute("post") Post post) {
+    @GetMapping(path = "/new")
+    public String createOne() {
         return "post/new_post";
     }
 

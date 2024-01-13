@@ -8,7 +8,7 @@
 <body>
 <form th:method="POST" th:action="@{/posts}" enctype="multipart/form-data">
     <label for="postName">Enter Post name: </label>
-    <input type="text" name="postName" id="postName">
+    <input type="text" name="postName" id="postName" required>
     <div>
         <input type="file" name="postImage" accept="image/*">
     </div>

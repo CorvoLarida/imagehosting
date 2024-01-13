@@ -3,6 +3,7 @@ package kz.am.imagehosting.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +19,9 @@ public class Post {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
+    @ManyToMany(mappedBy = "collectionPosts")
+    private Set<PostCollection> postCollections;
+    public Post(){}
     public UUID getId() {
         return id;
     }

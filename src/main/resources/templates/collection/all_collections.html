@@ -7,13 +7,13 @@
 </head>
 <body>
 <h1>ALL COLLECTIONS</h1>
-<!--<div th:each="post: ${posts}">-->
-<!--    <a th:href = "@{/templates/post/{id}(id=${post.getId()})}" th:text="${post.getPostName()}"></a>-->
-<!--</div>-->
+<div th:each="collection: ${collections}">
+    <a th:href = "@{/templates/collection/{id}(id=${collection.getId()})}" th:text="${collection.getPostCollectionName()()}"></a>
+</div>
 
 <br>
 <hr>
-<!--<a href="/posts/new">Create new post</a>-->
+<a href="/collections/new">Create new collection</a>
 
 
 </body>

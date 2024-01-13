@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Collection</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/collections}" enctype="multipart/form-data">
+    <label for="postCollectionName">Enter Post Collection Name: </label>
+    <input type="text" name="postCollectionName" id="postCollectionName" required>
+    <div th:each="post, iterVar: ${posts}">
+        <input type="checkbox"
+               th:name="${'selectedPost' + iterVar.index}"
+               th:value="${post.getPostName()}">
+        <label th:text="${post.getPostName()}"></label>
+    </div>
+    <button type="submit">Upload Collection</button>
+</form>
+</body>
+</html>
