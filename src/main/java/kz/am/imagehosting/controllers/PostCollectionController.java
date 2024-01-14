@@ -1,23 +1,17 @@
 package kz.am.imagehosting.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
-import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
+import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.repository.PostCollectionRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -43,20 +37,27 @@ public class PostCollectionController {
         return "collection/collection";
     }
     @GetMapping(path = "/new")
-    public String createCollection(Model model) {
+    private String createCollection(Model model) {
         model.addAttribute("posts", postRepository.findAll());
         return "collection/new_collection";
     }
     @PostMapping(path="")
-    public String addOne(HttpServletRequest request) {
-//    public String addOne(String postCollectionName, List<String> postsNames) {
-//        System.out.println(postCollectionName);
-//        System.out.println(postsNames);
-        System.out.println(request);
-        Map<String, String[]> paramMap = request.getParameterMap();
-        for (String mapKey: paramMap.keySet()){
-            System.out.println(mapKey + "=" + Arrays.toString(paramMap.get(mapKey)));
+    private String addCollection(@RequestParam(value="postCollectionName") String postCollectionName,
+                         @RequestParam(value="selectedPosts") UUID[] selectedPosts) {
+        PostCollection postCollection = new PostCollection();
+        postCollection.setPostCollectionName(postCollectionName);
+
+        Set<Post> posts = new HashSet<>();
+        Set<PostCollection> postCollections = new HashSet<>();
+        for(UUID post: selectedPosts){
+            posts.add(postRepository.findById(post).orElse(null));
         }
+        postCollection.setCollectionPosts(posts);
+        postCollections.add(postCollection);
+        postCollectionRepository.save(postCollection);
+
+        System.out.println("Method done");
+
         return "redirect:/collections";
     }
 

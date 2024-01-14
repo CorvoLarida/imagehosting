@@ -50,4 +50,22 @@ public class Post {
         if (this.image == null || this.id == null) return null;
         return this.image.getImageLocation();
     }
+
+    public Set<PostCollection> getPostCollections() {
+        return postCollections;
+    }
+
+    public void setPostCollections(Set<PostCollection> postCollections) {
+        this.postCollections = postCollections;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", postName='" + postName + '\'' +
+                ", image=" + image +
+                ", postCollections=" + postCollections +
+                '}';
+    }
 }

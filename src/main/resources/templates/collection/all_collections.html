@@ -8,7 +8,7 @@
 <body>
 <h1>ALL COLLECTIONS</h1>
 <div th:each="collection: ${collections}">
-    <a th:href = "@{/templates/collection/{id}(id=${collection.getId()})}" th:text="${collection.getPostCollectionName()()}"></a>
+    <a th:href = "@{/collections/{id}(id=${collection.getId()})}" th:text="${collection.getPostCollectionName()}"></a>
 </div>
 
 <br>
