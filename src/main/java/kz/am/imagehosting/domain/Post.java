@@ -3,6 +3,7 @@ package kz.am.imagehosting.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class Post {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
-
+    private ZonedDateTime createdAt = ZonedDateTime.now();
     @ManyToMany(mappedBy = "collectionPosts")
     private Set<PostCollection> postCollections;
     public Post(){}
@@ -57,6 +58,14 @@ public class Post {
 
     public void setPostCollections(Set<PostCollection> postCollections) {
         this.postCollections = postCollections;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

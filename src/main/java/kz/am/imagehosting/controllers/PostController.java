@@ -5,6 +5,7 @@ import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class PostController {
 
     @GetMapping(path="")
     private String getAllPosts(Model model) {
-        model.addAttribute("posts", postRepository.findAll());
+        model.addAttribute("posts", postRepository.findAll(Sort.by("createdAt").descending()));
         return "post/all_posts";
     }
 

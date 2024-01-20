@@ -20,6 +20,7 @@ public class PostCollection {
             name = "post_collections_posts",
             joinColumns = @JoinColumn(name = "post_collection_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @OrderBy("createdAt DESC")
     private Set<Post> collectionPosts;
 
     public PostCollection(){    }
