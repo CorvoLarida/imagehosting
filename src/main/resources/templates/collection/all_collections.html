@@ -6,6 +6,7 @@
     <title>All</title>
 </head>
 <body>
+<div th:insert="~{base :: header}"></div>
 <h1>ALL COLLECTIONS</h1>
 <div th:each="collection: ${collections}">
     <a th:href = "@{/collections/{id}(id=${collection.getId()})}" th:text="${collection.getPostCollectionName()}"></a>

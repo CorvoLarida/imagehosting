@@ -12,6 +12,7 @@
     </style>
 </head>
 <body>
+<div th:insert="~{base :: header}"></div>
 <h1 th:text="${'Collection: ' + collection.getPostCollectionName()}"></h1>
 <div th:each="post: ${collection.getCollectionPosts()}">
     <a th:href = "@{/posts/{id}(id=${post.getId()})}" th:text="${post.getPostName()}"></a>
