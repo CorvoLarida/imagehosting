@@ -21,7 +21,7 @@ public class User {
     private String password;
     private boolean active;
     @Column(name = "created_at")
-    private ZonedDateTime createdAt;
+    private ZonedDateTime createdAt = ZonedDateTime.now();
     @OneToMany
     private Set<UserRole> userRoles;
 
@@ -71,5 +71,17 @@ public class User {
 
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", createdAt=" + createdAt +
+                ", userRoles=" + userRoles +
+                '}';
     }
 }

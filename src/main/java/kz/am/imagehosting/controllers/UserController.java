@@ -20,16 +20,27 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @GetMapping("/login")
+    public String getLogin(){
+        return "/login";
+    }
+    @PostMapping("/login")
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        System.out.println(username + "   "  + password);
+        return "redirect:/index";
+    }
     @GetMapping("/register")
     public String getRegister(){
         return "/register";
     }
     @PostMapping("/register")
     public String register(@RequestParam("username") String username, @RequestParam("password") String password) {
+        System.out.println("registering");
         User userAccount = new User();
         userAccount.setUsername(username);
-        userAccount.setPassword(passwordEncoder.encode(password));
+        userAccount.setPassword(password);
         userAccount.setActive(true);
+        System.out.println(userAccount);
         userRepository.save(userAccount);
         return "redirect:/login";
     }
