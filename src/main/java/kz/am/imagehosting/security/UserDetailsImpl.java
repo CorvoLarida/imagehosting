@@ -1,8 +1,7 @@
 package kz.am.imagehosting.security;
 
-import kz.am.imagehosting.domain.User;
+import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +16,11 @@ public class UserDetailsImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username).orElse(null);
+        AuthUser authUser = userRepository.findFirstUserByUsername(username).orElse(null);
 
-        if (user == null) {
+        if (authUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new CustomUserDetails(user);
+        return new CustomUserDetails(authUser);
     }
 }

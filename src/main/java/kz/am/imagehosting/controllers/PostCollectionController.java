@@ -49,7 +49,7 @@ public class PostCollectionController {
 
         Set<Post> posts = new HashSet<>();
         Set<PostCollection> postCollections = new HashSet<>();
-        for(UUID post: selectedPosts){
+        for (UUID post: selectedPosts){
             posts.add(postRepository.findById(post).orElse(null));
         }
         postCollection.setCollectionPosts(posts);

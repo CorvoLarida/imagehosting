@@ -1,18 +1,14 @@
 package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "auth_user")
-public class User {
+public class AuthUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -22,8 +18,14 @@ public class User {
     private boolean active;
     @Column(name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now();
-    @OneToMany
-    private Set<UserRole> userRoles;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "auth_user_roles",
+            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}
+    )
+    private Set<AuthRole> authRoles;
 
     public UUID getId() {
         return id;
@@ -65,12 +67,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
+    public Set<AuthRole> getUserRoles() {
+        return authRoles;
     }
 
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public void setUserRoles(Set<AuthRole> authRoles) {
+        this.authRoles = authRoles;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", active=" + active +
                 ", createdAt=" + createdAt +
-                ", userRoles=" + userRoles +
+                ", userRoles=" + authRoles +
                 '}';
     }
 }

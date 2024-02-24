@@ -1,51 +1,53 @@
 package kz.am.imagehosting.security;
 
-import kz.am.imagehosting.domain.User;
+import kz.am.imagehosting.domain.AuthUser;
+import org.hibernate.annotations.Comment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
-
+@Component
 public class CustomUserDetails implements UserDetails {
 
-    private User user;
+    private AuthUser authUser;
 
     public CustomUserDetails(){
 
     }
-    public CustomUserDetails(User user) {
-        this.user = user;
+    public CustomUserDetails(AuthUser authUser) {
+        this.authUser = authUser;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return authUser.getUsername();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return authUser.getPassword();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return user.isActive();
+        return authUser.isActive();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.isActive();
+        return authUser.isActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return user.isActive();
+        return authUser.isActive();
     }
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return authUser.isActive();
     }
 
     @Override
