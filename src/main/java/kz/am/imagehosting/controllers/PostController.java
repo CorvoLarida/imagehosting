@@ -1,70 +1,40 @@
 package kz.am.imagehosting.controllers;
 
-import kz.am.imagehosting.domain.Image;
-import kz.am.imagehosting.domain.Post;
-import kz.am.imagehosting.repository.ImageRepository;
-import kz.am.imagehosting.repository.PostRepository;
+import kz.am.imagehosting.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 @Controller
 @RequestMapping(path="/posts")
 public class PostController {
-    private final PostRepository postRepository;
-    private final ImageRepository imageRepository;
+    private final PostService postService;
 
     @Autowired
-    public PostController(PostRepository postRepository, ImageRepository imageRepository) {
-        this.postRepository = postRepository;
-        this.imageRepository = imageRepository;
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
     @GetMapping(path="")
     private String getAllPosts(Model model) {
-        model.addAttribute("posts", postRepository.findAll(Sort.by("createdAt").descending()));
+        model.addAttribute("posts", postService.findAllPosts());
         return "post/all_posts";
     }
-
-    private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
     @PostMapping(path="")
     public String addOne(@RequestParam("postName") String postName,
                          @RequestParam("postImage") MultipartFile file) {
-
-        StringBuilder fileNames = new StringBuilder();
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        fileNames.append(file.getOriginalFilename());
-        System.out.println(fileNames);
-        try {
-            Files.write(fileNameAndPath, file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        Image uploadedImage = new Image();
-        uploadedImage.setImageLocation(fileNames.toString());
-        imageRepository.save(uploadedImage);
-        Post post = new Post();
-        post.setPostName(postName);
-        post.setImage(uploadedImage);
-        postRepository.save(post);
-
+        postService.savePost(postName, file);
         return "redirect:/posts";
     }
 
     @GetMapping(path="/{id}")
     private String getPost(@PathVariable("id") UUID id, Model model) {
-        model.addAttribute("post", postRepository.findById(id).orElse(null));
+        model.addAttribute("post", postService.findPostById(id));
         return "post/post";
     }
 
