@@ -3,7 +3,6 @@ package kz.am.imagehosting.service;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.repository.PostCollectionRepository;
-import kz.am.imagehosting.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,18 +31,14 @@ public class PostCollectionService {
         return postService.findAllPosts();
     }
     public void createCollection(String postCollectionName, UUID[] selectedPosts){
-        PostCollection postCollection = new PostCollection();
-        postCollection.setPostCollectionName(postCollectionName);
 
         Set<Post> posts = new HashSet<>();
-        Set<PostCollection> postCollections = new HashSet<>();
         for (UUID post: selectedPosts){
             posts.add(postService.findPostById(post));
         }
+        PostCollection postCollection = new PostCollection();
+        postCollection.setPostCollectionName(postCollectionName);
         postCollection.setCollectionPosts(posts);
-        postCollections.add(postCollection);
         postCollectionRepository.save(postCollection);
-
-        System.out.println("Method done");
     }
 }
