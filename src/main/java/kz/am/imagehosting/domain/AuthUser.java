@@ -18,8 +18,8 @@ public class AuthUser {
     private boolean active;
     @Column(name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now();
-    @OneToOne(mappedBy = "createdBy")
-    private Post post;
+    @OneToMany(mappedBy = "createdBy")
+    private Set<Post> post;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
