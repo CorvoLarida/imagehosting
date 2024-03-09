@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path="/test")
+@RequestMapping(path="/{username}")
 public class UserController {
 
 //    @GetMapping(path="/posts")
@@ -21,7 +21,8 @@ public class UserController {
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getCredentials());
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        return "index";
-}
+        return "redirect:/";
+    }
+
 
 }
