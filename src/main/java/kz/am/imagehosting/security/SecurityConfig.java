@@ -24,7 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private UserDetailsService userDetailsImpl;
+    private final UserDetailsService userDetailsImpl;
     @Autowired
     public SecurityConfig(UserDetailsImpl userDetailsImpl){
         this.userDetailsImpl = userDetailsImpl;
@@ -80,7 +80,6 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/register").permitAll()

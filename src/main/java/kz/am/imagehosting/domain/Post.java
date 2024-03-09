@@ -19,6 +19,10 @@ public class Post {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private AuthUser createdBy;
     private ZonedDateTime createdAt = ZonedDateTime.now();
     @ManyToMany(mappedBy = "collectionPosts")
     private Set<PostCollection> postCollections;
@@ -66,6 +70,14 @@ public class Post {
 
     public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public AuthUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(AuthUser createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override

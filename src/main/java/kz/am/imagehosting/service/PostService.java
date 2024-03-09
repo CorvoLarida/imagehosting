@@ -4,8 +4,10 @@ import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
+import kz.am.imagehosting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,12 +25,15 @@ import java.util.UUID;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
     @Autowired
-    public PostService(PostRepository postRepository, ImageRepository imageRepository) {
+    public PostService(PostRepository postRepository, ImageRepository imageRepository,
+                       UserRepository userRepository) {
         this.postRepository = postRepository;
         this.imageRepository = imageRepository;
+        this.userRepository = userRepository;
     }
 
     public Post findPostById(UUID id){
@@ -53,6 +58,11 @@ public class PostService {
         Post post = new Post();
         post.setPostName(postName);
         post.setImage(uploadedImage);
+
+        post.setCreatedBy(userRepository.findUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+                ).orElse(null));
+
         postRepository.save(post);
     }
 }
