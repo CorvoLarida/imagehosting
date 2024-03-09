@@ -9,7 +9,15 @@
 <div th:insert="~{base :: header}"></div>
 <div th:if="${param.registerSuccess}">REGISTRATION SUCCESSFULL</div>
 <h1>IMAGEHOSTING</h1>
-<div sec:authentication="name"></div>
+<div sec:authorize="isAuthenticated()">
+    <h2>
+        <a th:href="@{/posts/{username}(username=${#authentication.name})}">
+            My posts
+        </a>
+    </h2>
+</div>
+
+
 <h2><a href="/posts">All posts</a></h2>
 <h2><a href="/collections">All collections</a></h2>
 </body>
