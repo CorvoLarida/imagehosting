@@ -84,7 +84,6 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/posts/**").hasRole("USER")
-                        .requestMatchers("/{username}/**").hasRole("USER")
                         .requestMatchers("/collections/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
