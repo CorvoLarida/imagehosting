@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Post</title>
+    <style>
+        img.small {
+            width: 30%;
+            height: 30%;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="~{base :: header}"></div>
+
+<div sec:authorize="isAuthenticated()">
+    <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
+    <div>
+        <p th:if="${post.getImage() != null}">
+            <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" alt="Image">
+        </p>
+        <p th:unless="${post.getImage()  != null}">
+            No image
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -11,12 +11,12 @@
 <h1>IMAGEHOSTING</h1>
 <div sec:authorize="isAuthenticated()">
     <h2>
-        <a th:href="@{/{username}/test(username=${#authentication.name})}">
+        <a th:href="@{/{username}/posts(username=${#authentication.name})}">
             My Posts
         </a>
     </h2>
     <h2>
-        <a th:href="@{/{username}/test(username=${#authentication.name})}">
+        <a th:href="@{/{username}/collections(username=${#authentication.name})}">
             My Collections
         </a>
     </h2>

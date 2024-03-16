@@ -19,7 +19,9 @@ public class AuthUser {
     @Column(name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now();
     @OneToMany(mappedBy = "createdBy")
-    private Set<Post> post;
+    private Set<Post> posts;
+    @OneToMany(mappedBy = "createdBy")
+    private Set<PostCollection> postCollections;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

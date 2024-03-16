@@ -2,9 +2,18 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <body>
-<div style="text-align: right; background-color: cadetblue;" th:fragment="header">
-    <button><a href="/logout">Logout</a></button>
-    <button><a href="/register">Register</a></button>
+<div style="background-color: cadetblue;" th:fragment="header">
+    <button><a href="/">Home</a></button>
+    <div style="text-align: right">
+        <div sec:authorize="isAuthenticated()">
+            <button><a href="/logout">Logout</a></button>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <button><a href="/login">Login</a></button>
+            <button><a href="/register">Register</a></button>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

@@ -2,6 +2,7 @@ package kz.am.imagehosting.controllers;
 
 import kz.am.imagehosting.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,11 @@ public class PostController {
 
     @PostMapping(path="")
     public String addOne(@RequestParam("postName") String postName,
-                         @RequestParam("postImage") MultipartFile file) {
+                         @RequestParam("postImage") MultipartFile file,
+                         Authentication auth) {
         postService.savePost(postName, file);
+        String username = auth.getName();
+        if (username != null) return String.format("redirect:/%s/posts", username);
         return "redirect:/posts";
     }
 

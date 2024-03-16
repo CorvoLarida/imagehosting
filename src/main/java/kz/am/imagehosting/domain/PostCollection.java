@@ -23,6 +23,10 @@ public class PostCollection {
     @OrderBy("createdAt DESC")
     private Set<Post> collectionPosts;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    private AuthUser createdBy;
+
     public PostCollection(){    }
     public UUID getId() {
         return id;
@@ -46,5 +50,13 @@ public class PostCollection {
 
     public void setCollectionPosts(Set<Post> collectionPosts) {
         this.collectionPosts = collectionPosts;
+    }
+
+    public AuthUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(AuthUser createdBy) {
+        this.createdBy = createdBy;
     }
 }

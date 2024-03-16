@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Collections</title>
+</head>
+<body>
+<div th:insert="~{base :: header}"></div>
+
+<div sec:authorize="isAuthenticated()">
+    <h1><span th:text="${#authentication.name}"></span> COLLECTIONS</h1>
+    <div th:each="collection: ${collections}">
+        <a th:href = "@{/{username}/collections/{id}(username=${collection.getCreatedBy().getUsername()},
+                                                     id=${collection.getId()})}"
+           th:text="${collection.getPostCollectionName()}"></a>
+    </div>
+    <br>
+    <hr>
+    <a href="/collections/new">Create new collection</a>
+</div>
+
+</body>
+</html>

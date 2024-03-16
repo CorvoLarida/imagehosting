@@ -3,6 +3,7 @@ package kz.am.imagehosting.controllers;
 
 import kz.am.imagehosting.service.PostCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,11 @@ public class PostCollectionController {
     }
     @PostMapping(path="")
     private String addCollection(@RequestParam(value="postCollectionName") String postCollectionName,
-                                 @RequestParam(value="selectedPosts") UUID[] selectedPosts) {
+                                 @RequestParam(value="selectedPosts") UUID[] selectedPosts,
+                                 Authentication auth) {
         pcService.createCollection(postCollectionName, selectedPosts);
+        String username = auth.getName();
+        if (username != null) return String.format("redirect:/%s/collections", username);
         return "redirect:/collections";
     }
 
