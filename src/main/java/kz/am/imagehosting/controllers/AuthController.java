@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 
 @Controller
 public class AuthController {
-
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -35,16 +33,16 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/login")
+    @GetMapping(path="/login")
     public String getLogin(){
         return "/login";
     }
-    @GetMapping("/register")
+    @GetMapping(path="/register")
     public String getRegister(Model model){
         model.addAttribute("user",new RegistrationDto());
         return "/register";
     }
-    @PostMapping("/register")
+    @PostMapping(path="/register")
     public String register(@Valid @ModelAttribute("user") RegistrationDto rdto,
                            BindingResult bindingResult, Model model) {
         System.out.println("registering");

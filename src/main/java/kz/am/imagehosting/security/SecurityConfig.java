@@ -83,8 +83,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/register").permitAll()
-                        .requestMatchers("/posts/**").hasRole("USER")
-                        .requestMatchers("/collections/**").hasRole("ADMIN")
+//                        .requestMatchers("/posts/**").hasRole("USER")
+//                        .requestMatchers("/collections/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
                 )

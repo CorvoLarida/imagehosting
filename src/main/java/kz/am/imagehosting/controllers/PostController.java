@@ -42,7 +42,7 @@ public class PostController {
         return "post/post";
     }
 
-    @GetMapping(path = "/new")
+    @GetMapping(path="/new")
     public String createOne() {
         return "post/new_post";
     }

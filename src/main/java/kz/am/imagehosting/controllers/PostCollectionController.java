@@ -20,7 +20,7 @@ public class PostCollectionController {
         this.pcService = pcService;
     }
 
-    @GetMapping("")
+    @GetMapping(path="")
     private String getAllCollections(Model model) {
         model.addAttribute("collections", pcService.getAllCollections());
         return "collection/all_collections";
@@ -30,7 +30,7 @@ public class PostCollectionController {
         model.addAttribute("collection", pcService.getCollectionById(id));
         return "collection/collection";
     }
-    @GetMapping(path = "/new")
+    @GetMapping(path="/new")
     private String createCollection(Model model) {
         model.addAttribute("posts", pcService.getAllPosts());
         return "collection/new_collection";

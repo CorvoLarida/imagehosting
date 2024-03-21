@@ -21,7 +21,7 @@ public class UserCollectionsController {
         this.pcService = pcService;
 
     }
-    @GetMapping("")
+    @GetMapping(path="")
     private String getUserCollections(@PathVariable(value="username") String username,
                                       Model model, Authentication auth) {
         model.addAttribute("collections", pcService.getAllUserCollections(auth));

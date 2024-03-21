@@ -25,17 +25,17 @@ public class PeopleController {
 
     public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
-    @GetMapping("/")
+    @GetMapping(path="/")
     private String index(){
         return "index";
     }
-    @GetMapping("/all")
+    @GetMapping(path="/all")
     public String getAll(Model model) {
         model.addAttribute("images", imageRepository.findAll());
         return "all";
     }
 
-    @PostMapping("/upload")
+    @PostMapping(path="/upload")
     public String uploadImage(Model model, @RequestParam("image") MultipartFile file) {
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
