@@ -16,6 +16,9 @@
 
 <div sec:authorize="isAuthenticated()">
     <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
+    <a th:href="@{/posts/delete/{id}(id=${post.getId()})}">
+        Delete post123
+    </a>
     <div>
         <p th:if="${post.getImage() != null}">
             <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" alt="Image">

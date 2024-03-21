@@ -47,6 +47,9 @@ public class PostService {
         if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
         return Collections.emptyList();
     }
+    public void deletePost(Post post){
+        postRepository.deleteById(post.getId());
+    }
     public void savePost(String postName, MultipartFile file) {
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());

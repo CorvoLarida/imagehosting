@@ -9,7 +9,8 @@
 <div th:insert="~{base :: header}"></div>
 <h1>ALL POSTS</h1>
 <div th:each="post: ${posts}">
-    <a th:href = "@{/posts/{id}(id=${post.getId()})}" th:text="${post.getPostName()}"></a>
+    <a th:href = "@{/posts/{id}(id=${post.getId()})}"
+       th:text="${post.getPostName()}"></a>
 </div>
 
 <br>

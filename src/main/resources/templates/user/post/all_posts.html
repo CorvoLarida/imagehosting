@@ -10,6 +10,7 @@
 
 <div sec:authorize="isAuthenticated()">
     <h1><span th:text="${#authentication.name}"></span> POSTS</h1>
+    <span th:if="${param.postDeleted}" th:text="'post ' + ${param.postDeleted} + ' was deleted'"></span>
     <div th:each="post: ${posts}">
         <a th:href = "@{/{username}/posts/{id}(username=${post.getCreatedBy().getUsername()},
                                                id=${post.getId()})}"

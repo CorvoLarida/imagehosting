@@ -20,7 +20,7 @@ public class Post {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private AuthUser createdBy;
     private ZonedDateTime createdAt = ZonedDateTime.now();
