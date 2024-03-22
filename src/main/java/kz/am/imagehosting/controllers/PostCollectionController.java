@@ -1,7 +1,5 @@
 package kz.am.imagehosting.controllers;
 
-
-import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.service.PostCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;

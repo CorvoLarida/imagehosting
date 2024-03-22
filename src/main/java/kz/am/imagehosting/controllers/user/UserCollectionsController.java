@@ -1,5 +1,6 @@
 package kz.am.imagehosting.controllers.user;
 
+import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.service.PostCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,8 +30,14 @@ public class UserCollectionsController {
     }
     @GetMapping(path="/{id}")
     private String getUserCollection(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
-                                     Model model) {
-        model.addAttribute("collection", pcService.getCollectionById(id));
+                                     Model model, Authentication auth) {
+        PostCollection pc = pcService.getCollectionById(id);
+        boolean canDelete = false;
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        if (auth.getName().equals(pc.getCreatedBy().getUsername()) || isAdmin) canDelete = true;
+        model.addAttribute("collection", pc);
+        model.addAttribute("canDelete", canDelete);
         return "user/collection/collection";
     }
 }

@@ -2,13 +2,11 @@ package kz.am.imagehosting.security;
 
 import kz.am.imagehosting.domain.AuthRole;
 import kz.am.imagehosting.domain.AuthUser;
-import org.hibernate.annotations.Comment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component

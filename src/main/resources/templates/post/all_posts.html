@@ -9,8 +9,18 @@
 <div th:insert="~{base :: header}"></div>
 <h1>ALL POSTS</h1>
 <div th:each="post: ${posts}">
-    <a th:href = "@{/posts/{id}(id=${post.getId()})}"
-       th:text="${post.getPostName()}"></a>
+    <div th:with="postName=${post.getPostName()}">
+        <div th:if = "${post.getCreatedBy() == null}">
+            <a th:href = "@{/posts/{id}(id=${post.getId()})}"
+               th:text="${postName}"></a>
+        </div>
+        <div th:if = "${post.getCreatedBy() != null}">
+            <a th:href = "@{/{username}/posts/{id}(username=${post.getCreatedBy().getUsername()},
+                                                   id=${post.getId()})}"
+               th:text="${postName}"></a>
+        </div>
+</div>
+
 </div>
 
 <br>
