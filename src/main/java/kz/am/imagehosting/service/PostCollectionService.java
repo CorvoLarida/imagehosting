@@ -36,13 +36,16 @@ public class PostCollectionService {
         return Collections.emptyList();
     }
     public List<Post> getAllPosts(){
-        return postService.findAllPosts();
+        return postService.getAllPosts();
+    }
+    public void deleteCollection(PostCollection pc){
+        postCollectionRepository.deleteById(pc.getId());
     }
     public void createCollection(String postCollectionName, UUID[] selectedPosts){
 
         Set<Post> posts = new HashSet<>();
         for (UUID post: selectedPosts){
-            posts.add(postService.findPostById(post));
+            posts.add(postService.getPostById(post));
         }
         PostCollection postCollection = new PostCollection();
         postCollection.setPostCollectionName(postCollectionName);

@@ -10,6 +10,9 @@
 
 <div sec:authorize="isAuthenticated()">
     <h1><span th:text="${#authentication.name}"></span> COLLECTIONS</h1>
+
+    <span th:if="${param.collectionDeleted}" th:text="'collection ' + ${param.collectionDeleted} + ' was deleted'"></span>
+
     <div th:each="collection: ${collections}">
         <a th:href = "@{/{username}/collections/{id}(username=${collection.getCreatedBy().getUsername()},
                                                      id=${collection.getId()})}"

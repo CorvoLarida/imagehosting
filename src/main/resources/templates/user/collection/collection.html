@@ -10,6 +10,11 @@
 
 <div sec:authorize="isAuthenticated()">
     <h1 th:text="${'Collection: ' + collection.getPostCollectionName() + ' | by: ' + collection.getCreatedBy().getUsername()}"></h1>
+
+    <form th:method="DELETE" th:action="@{/collections/{id}(id=${collection.getId()})}">
+        <input type="submit" value="Delete collection">
+    </form>
+
     <div th:each="post: ${collection.getCollectionPosts()}">
         <a th:href = "@{/{username}/posts/{id}(username=${post.getCreatedBy().getUsername()},
                                                id=${post.getId()})}"

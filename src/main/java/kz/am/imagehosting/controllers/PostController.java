@@ -24,7 +24,7 @@ public class PostController {
 
     @GetMapping(path="")
     private String getAllPosts(Model model) {
-        model.addAttribute("posts", postService.findAllPosts());
+        model.addAttribute("posts", postService.getAllPosts());
         return "post/all_posts";
     }
 
@@ -40,17 +40,17 @@ public class PostController {
 
     @GetMapping(path="/{id}")
     private String getPost(@PathVariable("id") UUID id, Model model) {
-        model.addAttribute("post", postService.findPostById(id));
+        model.addAttribute("post", postService.getPostById(id));
         return "post/post";
     }
-    @GetMapping(path="/delete/{id}")
+
+    @DeleteMapping(path="/{id}")
     private String deletePost(@PathVariable("id") UUID id, Model model,
                               RedirectAttributes redirectAttrs, Authentication auth) {
-        Post post = postService.findPostById(id);
+        Post post = postService.getPostById(id);
         postService.deletePost(post);
         redirectAttrs.addAttribute("postDeleted", post.getPostName());
         String redirectUrl = "/" + auth.getName() + "/posts";
-        System.out.println(redirectUrl);
         return "redirect:" + redirectUrl;
     }
 

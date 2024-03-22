@@ -16,11 +16,10 @@
 
 <div sec:authorize="isAuthenticated()">
     <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
-    <a th:href="@{/posts/delete/{id}(id=${post.getId()})}">
-        <button type="button">
-            Delete post
-        </button>
-    </a>
+
+    <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+        <input type="submit" value="Delete post">
+    </form>
 
     <div>
         <p th:if="${post.getImage() != null}">

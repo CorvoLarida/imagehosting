@@ -15,7 +15,7 @@ public class PostCollection {
     @NotNull
     private String postCollectionName;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "post_collections_posts",
             joinColumns = @JoinColumn(name = "post_collection_id"),
@@ -23,7 +23,7 @@ public class PostCollection {
     @OrderBy("createdAt DESC")
     private Set<Post> collectionPosts;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private AuthUser createdBy;
 

@@ -23,13 +23,13 @@ public class UserPostsController {
     @GetMapping(path="")
     private String getUserPosts(@PathVariable(value="username") String username,
                                 Model model, Authentication auth) {
-        model.addAttribute("posts", postService.findAllUserPosts(auth));
+        model.addAttribute("posts", postService.getAllUserPosts(auth));
         return "user/post/all_posts";
     }
     @GetMapping(path="/{id}")
     private String getUserPost(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
                                Model model) {
-        model.addAttribute("post", postService.findPostById(id));
+        model.addAttribute("post", postService.getPostById(id));
         return "user/post/post";
     }
 

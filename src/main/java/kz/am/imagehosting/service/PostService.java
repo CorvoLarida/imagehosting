@@ -36,13 +36,13 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
-    public Post findPostById(UUID id){
+    public Post getPostById(UUID id){
         return postRepository.findById(id).orElse(null);
     }
-    public List<Post> findAllPosts(){
+    public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
-    public List<Post> findAllUserPosts(Authentication auth){
+    public List<Post> getAllUserPosts(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
         if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
         return Collections.emptyList();
