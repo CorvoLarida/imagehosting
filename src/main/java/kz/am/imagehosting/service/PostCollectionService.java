@@ -24,6 +24,16 @@ public class PostCollectionService {
         this.postCollectionRepository = postCollectionRepository;
         this.userRepository = userRepository;
     }
+    private PostCollection setPosts(PostCollection pc, UUID[] selectedPosts){
+        Set<Post> posts = new HashSet<>();
+        if (selectedPosts != null) {
+            for (UUID post: selectedPosts){
+                posts.add(postService.getPostById(post));
+            }
+        }
+        pc.setCollectionPosts(posts);
+        return pc;
+    }
     public PostCollection getCollectionById(UUID id){
         return postCollectionRepository.findById(id).orElse(null);
     }
@@ -38,21 +48,21 @@ public class PostCollectionService {
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
     }
-    public void deleteCollection(PostCollection pc){
-        postCollectionRepository.deleteById(pc.getId());
-    }
     public void createCollection(String postCollectionName, UUID[] selectedPosts){
-
-        Set<Post> posts = new HashSet<>();
-        for (UUID post: selectedPosts){
-            posts.add(postService.getPostById(post));
-        }
         PostCollection postCollection = new PostCollection();
         postCollection.setPostCollectionName(postCollectionName);
-        postCollection.setCollectionPosts(posts);
+        this.setPosts(postCollection, selectedPosts);
         postCollection.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         ).orElse(null));
         postCollectionRepository.save(postCollection);
+    }
+    public void updateCollection(PostCollection pc, String postCollectionName, UUID[] selectedPosts){
+        this.setPosts(pc, selectedPosts);
+        pc.setPostCollectionName(postCollectionName);
+        postCollectionRepository.save(pc);
+    }
+    public void deleteCollection(PostCollection pc){
+        postCollectionRepository.deleteById(pc.getId());
     }
 }

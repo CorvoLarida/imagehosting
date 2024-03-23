@@ -24,7 +24,11 @@ public class Post {
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private AuthUser createdBy;
     private ZonedDateTime createdAt = ZonedDateTime.now();
-    @ManyToMany(mappedBy = "collectionPosts")
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "post_collections_posts",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_collection_id"))
     private Set<PostCollection> postCollections;
     public Post(){}
     public UUID getId() {

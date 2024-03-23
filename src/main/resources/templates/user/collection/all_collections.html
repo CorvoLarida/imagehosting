@@ -12,7 +12,8 @@
     <h1><span th:text="${#authentication.name}"></span> COLLECTIONS</h1>
 
     <span th:if="${param.collectionDeleted}" th:text="'collection ' + ${param.collectionDeleted} + ' was deleted'"></span>
-
+    <span th:if="${param.collectionUpdated}" th:text="'collection ' + ${param.collectionUpdated} + ' was updated'"></span>
+    </div>
     <div th:each="collection: ${collections}">
         <a th:href = "@{/{username}/collections/{id}(username=${collection.getCreatedBy().getUsername()},
                                                      id=${collection.getId()})}"

@@ -28,7 +28,7 @@ public class PostCollectionController {
     }
     @PostMapping(path="")
     private String addCollection(@RequestParam(value="postCollectionName") String postCollectionName,
-                                 @RequestParam(value="selectedPosts") UUID[] selectedPosts,
+                                 @RequestParam(value="selectedPosts", required = false) UUID[] selectedPosts,
                                  Authentication auth) {
         pcService.createCollection(postCollectionName, selectedPosts);
         String username = auth.getName();
@@ -36,12 +36,31 @@ public class PostCollectionController {
         return "redirect:/collections";
     }
     @GetMapping(path="/{id}")
-    private String getCollection(@PathVariable("id") UUID id, Model model) {
+    private String getCollection(@PathVariable(value="id") UUID id, Model model) {
         model.addAttribute("collection", pcService.getCollectionById(id));
         return "collection/collection";
     }
+    @GetMapping(path="/{id}/edit")
+    private String getUpdateCollection(@PathVariable(value="id") UUID id, Model model) {
+        model.addAttribute("collection", pcService.getCollectionById(id));
+        model.addAttribute("posts", pcService.getAllPosts());
+        return "collection/edit_collection";
+    }
+    @PatchMapping(value = "/{id}")
+    private String updateCollection(@PathVariable(value="id") UUID id,
+                                    @RequestParam(value="postCollectionName") String postCollectionName,
+                                    @RequestParam(value="selectedPosts", required = false) UUID[] selectedPosts,
+                                    RedirectAttributes redirectAttrs, Authentication auth){
+        PostCollection pc = pcService.getCollectionById(id);
+        System.out.println(postCollectionName);
+        pcService.updateCollection(pc, postCollectionName, selectedPosts);
+        System.out.println(auth.getName());
+        redirectAttrs.addAttribute("collectionUpdated", pc.getPostCollectionName());
+        String redirectUrl = "/" + auth.getName() + "/collections";
+        return "redirect:" + redirectUrl;
+    }
     @DeleteMapping(path="/{id}")
-    private String deletePost(@PathVariable("id") UUID id, Model model,
+    private String deleteCollection(@PathVariable("id") UUID id, Model model,
                               RedirectAttributes redirectAttrs, Authentication auth) {
         PostCollection pc = pcService.getCollectionById(id);
         pcService.deleteCollection(pc);

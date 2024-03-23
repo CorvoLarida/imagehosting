@@ -23,6 +23,12 @@
            th:text="${post.getPostName()}"></a>
     </div>
 </div>
-
+<br>
+<hr>
+<button>
+    <a th:href="@{/collections/{id}/edit(id=${collection.getId()})}">
+        Edit collection
+    </a>
+</button>
 </body>
 </html>
