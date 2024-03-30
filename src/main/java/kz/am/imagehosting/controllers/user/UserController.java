@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(path="/{username}")
 public class UserController {
-
     private final PostService postService;
 
     @Autowired
     public UserController(PostService postService) {
         this.postService = postService;
     }
+
     @GetMapping(path="/test")
     private String testUser(Model model, Authentication auth) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -29,4 +29,5 @@ public class UserController {
         System.out.printf("%s%n",auth.getName());
         return "redirect:/";
     }
+
 }

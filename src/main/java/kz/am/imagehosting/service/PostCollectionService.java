@@ -24,6 +24,7 @@ public class PostCollectionService {
         this.postCollectionRepository = postCollectionRepository;
         this.userRepository = userRepository;
     }
+
     private PostCollection setPosts(PostCollection pc, UUID[] selectedPosts){
         Set<Post> posts = new HashSet<>();
         if (selectedPosts != null) {
@@ -34,20 +35,25 @@ public class PostCollectionService {
         pc.setCollectionPosts(posts);
         return pc;
     }
+
     public PostCollection getCollectionById(UUID id){
         return postCollectionRepository.findById(id).orElse(null);
     }
+
     public List<PostCollection> getAllCollections(){
         return postCollectionRepository.findAll();
     }
+
     public List<PostCollection> getAllUserCollections(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
         if (user != null) return postCollectionRepository.findPostCollectionByCreatedByOrderByPostCollectionNameAsc(user);
         return Collections.emptyList();
     }
+
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
     }
+
     public void createCollection(String postCollectionName, UUID[] selectedPosts){
         PostCollection postCollection = new PostCollection();
         postCollection.setPostCollectionName(postCollectionName);
@@ -57,12 +63,15 @@ public class PostCollectionService {
         ).orElse(null));
         postCollectionRepository.save(postCollection);
     }
+
     public void updateCollection(PostCollection pc, String postCollectionName, UUID[] selectedPosts){
         this.setPosts(pc, selectedPosts);
         pc.setPostCollectionName(postCollectionName);
         postCollectionRepository.save(pc);
     }
+
     public void deleteCollection(PostCollection pc){
         postCollectionRepository.deleteById(pc.getId());
     }
+
 }

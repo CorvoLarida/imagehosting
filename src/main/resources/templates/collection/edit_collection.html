@@ -15,7 +15,8 @@
         <div>
             <input type="checkbox"
                    name="selectedPosts"
-                   th:value="${post.getId()}">
+                   th:value="${post.getId()}"
+                   th:checked="${collection.getCollectionPosts().contains(post)}">
             <label th:text="${post.getPostName()}"></label>
         </div>
     </th:block>

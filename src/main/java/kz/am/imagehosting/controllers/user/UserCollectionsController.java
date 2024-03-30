@@ -22,12 +22,14 @@ public class UserCollectionsController {
         this.pcService = pcService;
 
     }
+
     @GetMapping(path="")
     private String getUserCollections(@PathVariable(value="username") String username,
                                       Model model, Authentication auth) {
         model.addAttribute("collections", pcService.getAllUserCollections(auth));
         return "user/collection/all_collections";
     }
+
     @GetMapping(path="/{id}")
     private String getUserCollection(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
                                      Model model, Authentication auth) {
@@ -40,4 +42,5 @@ public class UserCollectionsController {
         model.addAttribute("canDelete", canDelete);
         return "user/collection/collection";
     }
+
 }

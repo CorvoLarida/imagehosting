@@ -32,6 +32,14 @@
         </p>
     </div>
 </div>
-
+<div th:if="${#authentication.getName() == post.getCreatedBy().getUsername()}">
+    <br>
+    <hr>
+    <button>
+        <a th:href="@{/posts/{id}/edit(id=${post.getId()})}">
+            Edit post
+        </a>
+    </button>
+</div>
 </body>
 </html>

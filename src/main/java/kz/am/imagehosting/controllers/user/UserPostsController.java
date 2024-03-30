@@ -21,12 +21,14 @@ public class UserPostsController {
     public UserPostsController(PostService postService) {
         this.postService = postService;
     }
+
     @GetMapping(path="")
     private String getUserPosts(@PathVariable(value="username") String username,
                                 Model model, Authentication auth) {
         model.addAttribute("posts", postService.getAllUserPosts(auth));
         return "user/post/all_posts";
     }
+
     @GetMapping(path="/{id}")
     private String getUserPost(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
                                Model model, Authentication auth) {
@@ -39,6 +41,5 @@ public class UserPostsController {
         model.addAttribute("canDelete", canDelete);
         return "user/post/post";
     }
-
 
 }

@@ -23,6 +23,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public AuthController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -34,13 +35,15 @@ public class AuthController {
     public String getLogin(){
         return "/login";
     }
+
     @GetMapping(path="/register")
     public String getRegister(Model model){
         model.addAttribute("user",new RegistrationDto());
         return "/register";
     }
+
     @PostMapping(path="/register")
-    public String register(@Valid @ModelAttribute("user") RegistrationDto rdto,
+    public String register(@Valid @ModelAttribute(value="user") RegistrationDto rdto,
                            BindingResult bindingResult, Model model) {
         System.out.println("registering");
         AuthUser authUserAccount = userRepository.findUserByUsername(rdto.getUsername()).orElse(null);
@@ -60,7 +63,9 @@ public class AuthController {
             authUserAccount.setUserRoles(roles);
             System.out.println(authUserAccount);
             userRepository.save(authUserAccount);
+            return "redirect:/?registerSuccess";
         }
-        return "redirect:/?registerSuccess";
+        return "redirect:/";
     }
+
 }

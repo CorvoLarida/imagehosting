@@ -29,6 +29,7 @@ public class PeopleController {
     private String index(){
         return "index";
     }
+
     @GetMapping(path="/all")
     public String getAll(Model model) {
         model.addAttribute("images", imageRepository.findAll());
@@ -53,5 +54,6 @@ public class PeopleController {
         model.addAttribute("msg", "Uploaded images: " + fileNames);
         return "redirect:/all";
     }
+
 }
 
