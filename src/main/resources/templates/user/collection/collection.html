@@ -16,6 +16,11 @@
             <input type="submit" value="Delete collection">
         </form>
     </div>
+    <form th:method="GET" th:action="@{/{username}/collections/{id}/download
+                                              (username=${collection.getCreatedBy().getUsername()},
+                                               id=${collection.getId()})}">
+        <input type="submit" value="Download collection">
+    </form>
 
     <div th:each="post: ${collection.getCollectionPosts()}">
         <a th:href = "@{/{username}/posts/{id}(username=${post.getCreatedBy().getUsername()},

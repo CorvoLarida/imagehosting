@@ -22,6 +22,11 @@
             <input type="submit" value="Delete post">
         </form>
     </div>
+    <form th:method="GET" th:action="@{/{username}/posts/{id}/download
+                                              (username=${post.getCreatedBy().getUsername()},
+                                               id=${post.getId()})}">
+        <input type="submit" value="Download post">
+    </form>
 
     <div>
         <p th:if="${post.getImage() != null}">
