@@ -63,11 +63,14 @@ public class UserCollectionsController {
         response.setHeader("Content-Disposition",
                 String.format("attachment; filename=%s.zip", pc.getPostCollectionName()));
         Set<Post> posts = pc.getCollectionPosts();
+        String imageName = null;
+        FileSystemResource resource = null;
+        String imageExt = null;
         try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
             for (Post post : posts) {
-                String imageName = post.getImage().getImageLocation();
-                FileSystemResource resource = new FileSystemResource(ImageUtils.getImagePath(imageName));
-                String imageExt = ImageUtils.getImageExtenstion(imageName);
+                imageName = post.getImage().getImageLocation();
+                resource = new FileSystemResource(ImageUtils.getImagePath(imageName));
+                imageExt = ImageUtils.getImageExtenstion(imageName);
                 ZipEntry entry = new ZipEntry(String.format("%s.%s", post.getPostName(), imageExt));
                 entry.setSize(resource.contentLength());
                 zippedOut.putNextEntry(entry);
