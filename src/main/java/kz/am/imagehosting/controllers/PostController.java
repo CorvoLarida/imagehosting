@@ -1,5 +1,6 @@
 package kz.am.imagehosting.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.dto.PostDto;
 import kz.am.imagehosting.service.PostService;
@@ -10,7 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.http.HttpRequest;
+import java.util.Enumeration;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping(path="/posts")
@@ -29,9 +33,13 @@ public class PostController {
     }
 
     @PostMapping(path="")
-    public String addOne(PostDto postDto,
-                         Authentication auth) {
-        postService.savePost(postDto.getPostName(), postDto.getPostImage());
+    public String addOne(@ModelAttribute("postDto") PostDto postDto,
+                         Authentication auth, HttpServletRequest request) {
+//        Enumeration<String> stream = request.getParts();
+//        while (stream.hasMoreElements()){
+//            System.out.println(stream.nextElement());
+//        }
+        postService.savePost(postDto);
         String username = auth.getName();
         if (username != null) return String.format("redirect:/%s/posts", username);
         return "redirect:/posts";
@@ -72,7 +80,8 @@ public class PostController {
     }
 
     @GetMapping(path="/new")
-    public String createOne() {
+    public String createOne(@ModelAttribute("postDto") PostDto postDto, Model model) {
+        model.addAttribute("accesses", postService.getAllAccess());
         return "post/new_post";
     }
 

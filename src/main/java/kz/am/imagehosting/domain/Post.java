@@ -21,6 +21,10 @@ public class Post {
     private Image image;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "access_id", referencedColumnName = "id")
+    private PostAccess access;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private AuthUser createdBy;
     private ZonedDateTime createdAt = ZonedDateTime.now();
@@ -53,6 +57,14 @@ public class Post {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public PostAccess getAccess() {
+        return access;
+    }
+
+    public void setAccess(PostAccess access) {
+        this.access = access;
     }
 
     public String getPhotosImagePath() {

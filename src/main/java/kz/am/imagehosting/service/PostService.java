@@ -3,6 +3,9 @@ package kz.am.imagehosting.service;
 import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
+import kz.am.imagehosting.domain.PostAccess;
+import kz.am.imagehosting.dto.PostDto;
+import kz.am.imagehosting.repository.AccessRepository;
 import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import kz.am.imagehosting.repository.UserRepository;
@@ -24,16 +27,21 @@ import java.util.UUID;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final AccessRepository accessRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
 
     @Autowired
-    public PostService(PostRepository postRepository, ImageRepository imageRepository,
+    public PostService(PostRepository postRepository, AccessRepository accessRepository, ImageRepository imageRepository,
                        UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.accessRepository = accessRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
+    }
+    public List<PostAccess> getAllAccess(){
+        return accessRepository.findAll();
     }
 
     public Post getPostById(UUID id){
@@ -52,11 +60,17 @@ public class PostService {
         postRepository.deleteById(post.getId());
     }
 
-    public void savePost(String postName, MultipartFile file) {
+    public void savePost(PostDto postDto) {
+        String postName = postDto.getPostName();
+        MultipartFile file = postDto.getPostImage();
+        Integer accessId = postDto.getAccessId();
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileNames.append(file.getOriginalFilename());
         System.out.println(fileNames);
+        System.out.println(postName);
+        System.out.println(file);
+        System.out.println(accessId);
         try {
             Files.write(fileNameAndPath, file.getBytes());
         } catch (IOException e) {
@@ -68,6 +82,7 @@ public class PostService {
         Post post = new Post();
         post.setPostName(postName);
         post.setImage(uploadedImage);
+//        post.setAccess(access);
         post.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
                 ).orElse(null));
