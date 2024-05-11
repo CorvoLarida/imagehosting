@@ -67,10 +67,6 @@ public class PostService {
         StringBuilder fileNames = new StringBuilder();
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileNames.append(file.getOriginalFilename());
-        System.out.println(fileNames);
-        System.out.println(postName);
-        System.out.println(file);
-        System.out.println(accessId);
         try {
             Files.write(fileNameAndPath, file.getBytes());
         } catch (IOException e) {
@@ -82,7 +78,7 @@ public class PostService {
         Post post = new Post();
         post.setPostName(postName);
         post.setImage(uploadedImage);
-//        post.setAccess(access);
+        post.setAccess(accessRepository.findById(accessId).orElse(null));
         post.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
                 ).orElse(null));

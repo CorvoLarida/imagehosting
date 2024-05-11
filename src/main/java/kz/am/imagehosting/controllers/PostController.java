@@ -34,11 +34,7 @@ public class PostController {
 
     @PostMapping(path="")
     public String addOne(@ModelAttribute("postDto") PostDto postDto,
-                         Authentication auth, HttpServletRequest request) {
-//        Enumeration<String> stream = request.getParts();
-//        while (stream.hasMoreElements()){
-//            System.out.println(stream.nextElement());
-//        }
+                         Authentication auth) {
         postService.savePost(postDto);
         String username = auth.getName();
         if (username != null) return String.format("redirect:/%s/posts", username);
@@ -80,7 +76,7 @@ public class PostController {
     }
 
     @GetMapping(path="/new")
-    public String createOne(@ModelAttribute("postDto") PostDto postDto, Model model) {
+    public String createOne(Model model) {
         model.addAttribute("accesses", postService.getAllAccess());
         return "post/new_post";
     }

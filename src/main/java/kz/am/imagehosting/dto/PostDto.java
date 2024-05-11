@@ -1,6 +1,5 @@
 package kz.am.imagehosting.dto;
 
-import kz.am.imagehosting.domain.PostAccess;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PostDto {
@@ -28,7 +27,8 @@ public class PostDto {
         return accessId;
     }
 
-    public void setAccess(Integer accessId) {
+    public void setAccessId(Integer accessId) {
         this.accessId = accessId;
     }
+
 }
