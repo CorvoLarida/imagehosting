@@ -28,7 +28,7 @@ public class PostController {
 
     @GetMapping(path="")
     private String getAllPosts(Model model) {
-        model.addAttribute("posts", postService.getAllPosts());
+        model.addAttribute("posts", postService.getAllPublicPosts());
         return "post/all_posts";
     }
 

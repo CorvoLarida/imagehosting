@@ -50,6 +50,9 @@ public class PostService {
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
+    public List<Post> getAllPublicPosts(){
+        return getAllPosts().stream().filter(x -> x.getAccess().getName().equals("PUBLIC")).toList();
+    }
     public List<Post> getAllUserPosts(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
         if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
