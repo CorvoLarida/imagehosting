@@ -7,19 +7,25 @@
 </head>
 <body>
 <div th:insert="~{base :: header}"></div>
-<form th:method="POST" th:action="@{/posts}" enctype="multipart/form-data">
-    <label for="postName">Enter Post Name: </label>
-    <input type="text" name="postName" id="postName" required>
-    <div>
-        <input type="file" name="postImage" id="postImage" accept="image/*" required>
-    </div>
-    <label for="accessId">Visibility</label>
-    <select name="accessId" id="accessId">
-        <option th:each="access: ${accesses}"
-                th:value="${access.getId()}"
-                th:text="${access.getName()}"></option>
-    </select>
-    <button type="submit">Upload Post</button>
-</form>
+    <form th:method="POST" th:action="@{/posts}" enctype="multipart/form-data">
+        <div>
+            <label for="postName">Enter Post Name: </label>
+            <input type="text" name="postName" id="postName" required>
+        </div>
+        <div>
+            <label for="postImage">Image: </label>
+            <input type="file" name="postImage" id="postImage" accept="image/*" required>
+        </div>
+        <div>
+            <label for="accessId">Visibility: </label>
+            <select name="accessId" id="accessId">
+                <option th:each="access: ${accesses}"
+                        th:value="${access.getId()}"
+                        th:text="${access.getName()}"></option>
+            </select>
+        </div>
+        <br>
+        <button type="submit">Upload Post</button>
+    </form>
 </body>
 </html>

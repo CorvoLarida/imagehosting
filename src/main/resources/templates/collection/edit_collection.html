@@ -8,19 +8,23 @@
 <body>
 <div th:insert="~{base :: header}"></div>
 <form th:method="PATCH" th:action="@{/collections/{id}(id=${collection.getId()})}" enctype="multipart/form-data">
-    <label for="postCollectionName">Post Collection Name: </label>
-    <input type="text" name="postCollectionName" id="postCollectionName" required
-           th:value="${collection.getPostCollectionName()}">
-    <th:block th:each="post: ${posts}">
-        <div>
-            <input type="checkbox"
-                   name="selectedPosts"
-                   th:value="${post.getId()}"
-                   th:checked="${collection.getCollectionPosts().contains(post)}">
-            <label th:text="${post.getPostName()}"></label>
-        </div>
-    </th:block>
-
+    <div>
+        <label for="postCollectionName">Post Collection Name: </label>
+        <input type="text" name="postCollectionName" id="postCollectionName" required
+               th:value="${collection.getPostCollectionName()}">
+    </div>
+    <div>
+        <th:block th:each="post: ${posts}">
+            <div>
+                <input type="checkbox"
+                       name="selectedPosts"
+                       th:value="${post.getId()}"
+                       th:checked="${collection.getCollectionPosts().contains(post)}">
+                <label th:text="${post.getPostName()}"></label>
+            </div>
+        </th:block>
+    </div>
+    <br>
     <button type="submit">Update Collection</button>
 </form>
 </body>

@@ -3,6 +3,7 @@ package kz.am.imagehosting.service;
 import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostCollection;
+import kz.am.imagehosting.dto.create.PostCollectionDto;
 import kz.am.imagehosting.repository.PostCollectionRepository;
 import kz.am.imagehosting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,9 @@ public class PostCollectionService {
         return postCollectionRepository.findAll();
     }
 
-    public List<PostCollection> getAllUserCollections(Authentication auth){
+    public List<PostCollection> getAllCollections(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
-        if (user != null) return postCollectionRepository.findPostCollectionByCreatedByOrderByPostCollectionNameAsc(user);
+        if (user != null) return postCollectionRepository.findPostCollectionsByCreatedByOrderByPostCollectionNameAsc(user);
         return Collections.emptyList();
     }
 
@@ -54,10 +55,10 @@ public class PostCollectionService {
         return postService.getAllPosts();
     }
 
-    public void createCollection(String postCollectionName, UUID[] selectedPosts){
+    public void createCollection(PostCollectionDto postCollectionDto){
         PostCollection postCollection = new PostCollection();
-        postCollection.setPostCollectionName(postCollectionName);
-        this.setPosts(postCollection, selectedPosts);
+        postCollection.setPostCollectionName(postCollectionDto.getPostCollectionName());
+        this.setPosts(postCollection, postCollectionDto.getSelectedPosts());
         postCollection.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         ).orElse(null));

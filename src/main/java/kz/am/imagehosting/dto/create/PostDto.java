@@ -1,4 +1,4 @@
-package kz.am.imagehosting.dto;
+package kz.am.imagehosting.dto.create;
 
 import org.springframework.web.multipart.MultipartFile;
 

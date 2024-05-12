@@ -3,7 +3,7 @@ package kz.am.imagehosting.controllers;
 import jakarta.validation.Valid;
 import kz.am.imagehosting.domain.AuthRole;
 import kz.am.imagehosting.domain.AuthUser;
-import kz.am.imagehosting.dto.RegistrationDto;
+import kz.am.imagehosting.dto.create.RegistrationDto;
 import kz.am.imagehosting.repository.RoleRepository;
 import kz.am.imagehosting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

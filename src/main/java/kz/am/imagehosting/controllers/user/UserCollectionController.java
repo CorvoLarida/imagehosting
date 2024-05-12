@@ -5,33 +5,30 @@ import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.service.PostCollectionService;
 import kz.am.imagehosting.utils.ImageUtils;
+import kz.am.imagehosting.utils.UserUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Controller
 @RequestMapping(path="/{username}/collections")
-public class UserCollectionsController {
+public class UserCollectionController {
     private final PostCollectionService pcService;
 
     @Autowired
-    public UserCollectionsController(PostCollectionService pcService) {
+    public UserCollectionController(PostCollectionService pcService) {
         this.pcService = pcService;
 
     }
@@ -39,7 +36,7 @@ public class UserCollectionsController {
     @GetMapping(path="")
     private String getUserCollections(@PathVariable(value="username") String username,
                                       Model model, Authentication auth) {
-        model.addAttribute("collections", pcService.getAllUserCollections(auth));
+        model.addAttribute("collections", pcService.getAllCollections(auth));
         return "user/collection/all_collections";
     }
 
@@ -47,10 +44,7 @@ public class UserCollectionsController {
     private String getUserCollection(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
                                      Model model, Authentication auth) {
         PostCollection pc = pcService.getCollectionById(id);
-        boolean canDelete = false;
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-        if (auth.getName().equals(pc.getCreatedBy().getUsername()) || isAdmin) canDelete = true;
+        boolean canDelete = UserUtils.canDelete(auth, pc.getCreatedBy().getUsername());
         model.addAttribute("collection", pc);
         model.addAttribute("canDelete", canDelete);
         return "user/collection/collection";

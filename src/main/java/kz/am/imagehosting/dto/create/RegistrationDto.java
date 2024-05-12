@@ -1,4 +1,4 @@
-package kz.am.imagehosting.dto;
+package kz.am.imagehosting.dto.create;
 
 import jakarta.validation.constraints.NotEmpty;
 

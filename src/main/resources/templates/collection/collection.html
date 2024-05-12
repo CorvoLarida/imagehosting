@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>All</title>
+    <title>Collection</title>
     <style>
         img.small {
             width: 30%;
@@ -15,9 +15,10 @@
 <div th:insert="~{base :: header}"></div>
 <h1 th:text="${'Collection: ' + collection.getPostCollectionName()}"></h1>
 <div th:each="post: ${collection.getCollectionPosts()}">
-    <a th:href = "@{/posts/{id}(id=${post.getId()})}"
-       th:text="${post.getPostName()}"></a>
+    <div th:if="${post.getAccess().getName().equals('PUBLIC')}">
+        <a th:href = "@{/posts/{id}(id=${post.getId()})}"
+           th:text="${post.getPostName()}"></a>
+    </div>
 </div>
-
 </body>
 </html>

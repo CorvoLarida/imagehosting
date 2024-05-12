@@ -15,36 +15,43 @@
 <div th:insert="~{base :: header}"></div>
 
 <div sec:authorize="isAuthenticated()">
-    <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
 
-    <div th:if="${canDelete == true}">
-        <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
-            <input type="submit" value="Delete post">
-        </form>
-    </div>
-    <form th:method="GET" th:action="@{/{username}/posts/{id}/download
+    <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
+    <div th:if="${userHasAccess}">
+        <div th:if="${canDelete == true}">
+            <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                <input type="submit" value="Delete post">
+            </form>
+        </div>
+        <form th:method="GET" th:action="@{/{username}/posts/{id}/download
                                               (username=${post.getCreatedBy().getUsername()},
                                                id=${post.getId()})}">
-        <input type="submit" value="Download post">
-    </form>
+            <input type="submit" value="Download post">
+        </form>
 
-    <div>
-        <p th:if="${post.getImage() != null}">
-            <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" alt="Image">
-        </p>
-        <p th:unless="${post.getImage()  != null}">
-            No image
-        </p>
+        <div>
+            <p th:if="${post.getImage() != null}">
+                <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" alt="Image">
+            </p>
+            <p th:unless="${post.getImage()  != null}">
+                No image
+            </p>
+        </div>
+        <div th:if="${#authentication.getName() == post.getCreatedBy().getUsername()}">
+            <br>
+            <hr>
+            <button>
+                <a th:href="@{/posts/{id}/edit(id=${post.getId()})}">
+                    Edit post
+                </a>
+            </button>
+        </div>
     </div>
+    <div th:unless="${userHasAccess}">
+        <h3>This is a private post. You can't view it.</h3>
+    </div>
+
 </div>
-<div th:if="${#authentication.getName() == post.getCreatedBy().getUsername()}">
-    <br>
-    <hr>
-    <button>
-        <a th:href="@{/posts/{id}/edit(id=${post.getId()})}">
-            Edit post
-        </a>
-    </button>
-</div>
+
 </body>
 </html>

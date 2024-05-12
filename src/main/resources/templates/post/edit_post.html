@@ -3,14 +3,26 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Collection</title>
+    <title>Edit Post</title>
 </head>
 <body>
 <div th:insert="~{base :: header}"></div>
     <form th:method="PATCH" th:action="@{/posts/{id}(id=${post.getId()})}" enctype="multipart/form-data">
-        <label for="postCollectionName">Post Name: </label>
-        <input type="text" name="postCollectionName" id="postCollectionName" required
-               th:value="${post.getPostName()}">
+        <div>
+            <label for="postName">Post Name: </label>
+            <input type="text" name="postName" id="postName" required
+                   th:value="${post.getPostName()}">
+        </div>
+        <div>
+            <label for="accessId">Visibility: </label>
+            <select name="accessId" id="accessId">
+                <option th:each="access: ${accesses}"
+                        th:value="${access.getId()}"
+                        th:selected="${access == post.getAccess()}"
+                        th:text="${access.getName()}"></option>
+            </select>
+        </div>
+        <br>
         <button type="submit">Update Post</button>
     </form>
 </body>

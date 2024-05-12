@@ -4,7 +4,8 @@ import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostAccess;
-import kz.am.imagehosting.dto.PostDto;
+import kz.am.imagehosting.dto.create.PostDto;
+import kz.am.imagehosting.dto.update.PostUpdateDto;
 import kz.am.imagehosting.repository.AccessRepository;
 import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
@@ -50,10 +51,12 @@ public class PostService {
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
-    public List<Post> getAllPublicPosts(){
-        return getAllPosts().stream().filter(x -> x.getAccess().getName().equals("PUBLIC")).toList();
+    public List<Post> getAllPosts(String accessType){
+        PostAccess access = accessRepository.findByName(accessType).orElse(null);
+        if (access != null) return postRepository.findPostsByAccess(access);
+        return Collections.emptyList();
     }
-    public List<Post> getAllUserPosts(Authentication auth){
+    public List<Post> getAllPosts(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
         if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
         return Collections.emptyList();
@@ -88,8 +91,9 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void updatePost(Post post, String postName){
-        post.setPostName(postName);
+    public void updatePost(Post post, PostUpdateDto puDto){
+        post.setPostName(puDto.getPostName());
+        post.setAccess(accessRepository.getReferenceById(puDto.getAccessId()));
         postRepository.save(post);
     }
 

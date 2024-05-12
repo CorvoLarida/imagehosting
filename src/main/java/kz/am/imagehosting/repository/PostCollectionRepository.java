@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PostCollectionRepository extends JpaRepository<PostCollection, UUID> {
-    List<PostCollection> findPostCollectionByCreatedByOrderByPostCollectionNameAsc (AuthUser createdBy);
+    List<PostCollection> findPostCollectionsByCreatedByOrderByPostCollectionNameAsc(AuthUser createdBy);
 
 }

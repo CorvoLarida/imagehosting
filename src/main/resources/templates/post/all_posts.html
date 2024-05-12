@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>All</title>
+    <title>All Posts</title>
 </head>
 <body>
 <div th:insert="~{base :: header}"></div>
@@ -19,14 +19,11 @@
                                                    id=${post.getId()})}"
                th:text="${postName}"></a>
         </div>
+    </div>
 </div>
-
-</div>
-
 <br>
 <hr>
 <a href="/posts/new">Create new post</a>
-
 
 </body>
 </html>
