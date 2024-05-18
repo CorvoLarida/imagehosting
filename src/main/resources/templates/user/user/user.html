@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Uses</title>
+</head>
+<body>
+<div th:insert="~{base :: header}"></div>
+
+<h1 th:text="${username}"></h1>
+
+<h3><a th:href="@{/{username}/posts(username=${username})}">Posts</a></h3>
+
+<h3><a th:href="@{/{username}/collections(username=${username})}">Collections</a></h3>
+
+<br>
+<hr>
+
+</body>
+</html>

@@ -36,7 +36,8 @@ public class UserCollectionController {
     @GetMapping(path="")
     private String getUserCollections(@PathVariable(value="username") String username,
                                       Model model, Authentication auth) {
-        model.addAttribute("collections", pcService.getAllCollections(auth));
+        model.addAttribute("username", username);
+        model.addAttribute("collections", pcService.getAllCollections(username));
         return "user/collection/all_collections";
     }
 

@@ -22,4 +22,7 @@ public class UserUtils {
         }
         return canUserAccessPost;
     }
+    public static boolean canSeeAllUserPosts(Authentication auth, String username){
+        return auth.getName().equals(username) || auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+    }
 }

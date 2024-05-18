@@ -9,7 +9,7 @@
 <div th:insert="~{base :: header}"></div>
 
 <div sec:authorize="isAuthenticated()">
-    <h1><span th:text="${#authentication.name}"></span> POSTS</h1>
+    <h1><span th:text="${username}"></span> POSTS</h1>
 
     <span th:if="${param.postDeleted}" th:text="'post ' + ${param.postDeleted} + ' was deleted'"></span>
     <span th:if="${param.postUpdated}" th:text="'post ' + ${param.postUpdated} + ' was updated'"></span>

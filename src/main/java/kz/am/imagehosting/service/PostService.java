@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -51,14 +52,27 @@ public class PostService {
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
-    public List<Post> getAllPosts(String accessType){
-        PostAccess access = accessRepository.findByName(accessType).orElse(null);
-        if (access != null) return postRepository.findPostsByAccess(access);
+    public List<Post> getPublicPosts(){
+        PostAccess access = accessRepository.getReferenceByName("PUBLIC");
+        return postRepository.findPostsByAccess(access);
+    }
+    private List<Post> getAllPosts(String username){
+        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
+        if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
         return Collections.emptyList();
+    }
+    public List<Post> getAllPosts(String username, boolean canUserSeePosts){
+        List<Post> userPosts = this.getAllPosts(username);
+        if (!canUserSeePosts) userPosts = userPosts.stream().filter(post -> post.getAccess().getName().equals("PUBLIC"))
+                                                            .collect(Collectors.toList());
+        return userPosts;
     }
     public List<Post> getAllPosts(Authentication auth){
         AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
-        if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
+        if (user != null){
+
+            return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
+        }
         return Collections.emptyList();
     }
 

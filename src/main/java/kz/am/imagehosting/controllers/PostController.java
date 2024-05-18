@@ -26,7 +26,7 @@ public class PostController {
 
     @GetMapping(path="")
     private String getAllPosts(Model model, Authentication auth) {
-        List<Post> posts = postService.getAllPosts();
+        List<Post> posts = postService.getPublicPosts();
         model.addAttribute("posts", posts);
         return "post/all_posts";
     }
@@ -55,8 +55,6 @@ public class PostController {
 
     @PatchMapping(value = "/{id}")
     private String updatePost(@PathVariable(value="id") UUID id,
-//                              @RequestParam(value="postName") String postName,
-//                              @RequestParam(value="accessId") Integer accessId,
                               PostUpdateDto puDto,
                               RedirectAttributes redirectAttrs, Authentication auth){
         Post post = postService.getPostById(id);

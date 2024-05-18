@@ -30,7 +30,9 @@ public class UserPostController {
     @GetMapping(path="")
     private String getUserPosts(@PathVariable(value="username") String username,
                                 Model model, Authentication auth) {
-        model.addAttribute("posts", postService.getAllPosts(auth));
+        model.addAttribute("username", username);
+        model.addAttribute("posts", postService.getAllPosts(username,
+                                                UserUtils.canSeeAllUserPosts(auth, username)));
         return "user/post/all_posts";
     }
 

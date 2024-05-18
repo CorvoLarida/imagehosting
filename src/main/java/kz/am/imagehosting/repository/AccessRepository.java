@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface AccessRepository extends JpaRepository<PostAccess, Integer> {
     Optional<PostAccess> findByName(String name);
+    PostAccess getReferenceByName(String name);
     List<PostAccess> findAllByName(String name);
 }

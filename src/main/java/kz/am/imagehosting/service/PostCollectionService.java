@@ -45,8 +45,8 @@ public class PostCollectionService {
         return postCollectionRepository.findAll();
     }
 
-    public List<PostCollection> getAllCollections(Authentication auth){
-        AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
+    public List<PostCollection> getAllCollections(String username){
+        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
         if (user != null) return postCollectionRepository.findPostCollectionsByCreatedByOrderByPostCollectionNameAsc(user);
         return Collections.emptyList();
     }
