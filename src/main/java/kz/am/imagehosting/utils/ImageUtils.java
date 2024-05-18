@@ -1,7 +1,7 @@
 package kz.am.imagehosting.utils;
 
 public class ImageUtils {
-    public static String getImageExtenstion(String imageName){
+    public static String getImageExtension(String imageName){
         String[] imageSplit = imageName.split("\\.");
         return imageSplit[imageSplit.length - 1];
     }

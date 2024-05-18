@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -26,14 +27,14 @@ public class PostController {
 
     @GetMapping(path="")
     private String getAllPosts(Model model, Authentication auth) {
-        List<Post> posts = postService.getPublicPosts();
+        List<Post> posts = postService.getAllPosts(auth);
         model.addAttribute("posts", posts);
         return "post/all_posts";
     }
 
     @PostMapping(path="")
-    public String addOne(@ModelAttribute("postDto") PostDto postDto,
-                         Authentication auth) {
+    public String addPost(@ModelAttribute("postDto") PostDto postDto,
+                          Authentication auth) {
         postService.savePost(postDto);
         String username = auth.getName();
         String redirectUrl = (username != null) ? String.format("/%s/posts", username): "/posts";
@@ -48,8 +49,9 @@ public class PostController {
 
     @GetMapping(path="/{id}/edit")
     private String getUpdatePost(@PathVariable(value="id") UUID id, Model model) {
-        model.addAttribute("post", postService.getPostById(id));
-        model.addAttribute("accesses", postService.getAllAccess());
+        model.addAllAttributes(Map.of("post", postService.getPostById(id),
+                                      "accesses", postService.getAllAccess()
+        ));
         return "post/edit_post";
     }
 
@@ -76,7 +78,7 @@ public class PostController {
     }
 
     @GetMapping(path="/new")
-    public String createOne(Model model) {
+    public String createPost(Model model) {
         model.addAttribute("accesses", postService.getAllAccess());
         return "post/new_post";
     }

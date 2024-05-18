@@ -10,5 +10,4 @@ import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findPostsByCreatedByOrderByCreatedAtDesc (AuthUser createdBy);
-    List<Post> findPostsByAccess (PostAccess access);
 }

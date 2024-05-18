@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -44,9 +45,12 @@ public class PostCollectionController {
     }
 
     @GetMapping(path="/{id}/edit")
-    private String getUpdateCollection(@PathVariable(value="id") UUID id, Model model) {
-        model.addAttribute("collection", pcService.getCollectionById(id));
-        model.addAttribute("posts", pcService.getAllPosts());
+    private String getUpdateCollection(@PathVariable(value="id") UUID id, Model model,
+                                       Authentication auth) {
+        model.addAllAttributes(Map.of(
+                "collection", pcService.getCollectionById(id),
+                "posts", pcService.getAllPosts(auth)
+        ));
         return "collection/edit_collection";
     }
 

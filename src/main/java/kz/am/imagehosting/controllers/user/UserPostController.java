@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.*;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -30,22 +31,23 @@ public class UserPostController {
     @GetMapping(path="")
     private String getUserPosts(@PathVariable(value="username") String username,
                                 Model model, Authentication auth) {
-        model.addAttribute("username", username);
-        model.addAttribute("posts", postService.getAllPosts(username,
-                                                UserUtils.canSeeAllUserPosts(auth, username)));
-        return "user/post/all_posts";
+        model.addAllAttributes(Map.of(
+                "username", username,
+                "posts", postService.getAllPosts(auth, username)
+        ));
+        return "post/user/all_posts";
     }
 
     @GetMapping(path="/{id}")
     private String getUserPost(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
                                Model model, Authentication auth) {
         Post post = postService.getPostById(id);
-        boolean userHasAccess = UserUtils.canUserAccessPost(auth, post);
-        boolean canDelete = UserUtils.canDelete(auth, post.getCreatedBy().getUsername());
-        model.addAttribute("post", post);
-        model.addAttribute("canDelete", canDelete);
-        model.addAttribute("userHasAccess", userHasAccess);
-        return "user/post/post";
+        model.addAllAttributes(Map.of(
+                "post", post,
+                "canDelete", UserUtils.canSeeAllUserPosts(auth, post.getCreatedBy().getUsername()),
+                "userHasAccess",  UserUtils.canUserAccessPost(auth, post)
+        ));
+        return "post/user/post";
     }
 
     @GetMapping(path="/{id}/download")
@@ -54,7 +56,7 @@ public class UserPostController {
         response.setContentType("image/jpeg");
         Post post = postService.getPostById(id);
         String imageName = post.getImage().getImageLocation();
-        String imageExt = ImageUtils.getImageExtenstion(imageName);
+        String imageExt = ImageUtils.getImageExtension(imageName);
         response.setHeader("Content-Disposition",
                 String.format("attachment; filename=%s.%s", post.getPostName(), imageExt));
         String imageFilePath = ImageUtils.getImagePath(imageName);

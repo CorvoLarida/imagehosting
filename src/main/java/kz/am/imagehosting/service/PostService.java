@@ -42,6 +42,11 @@ public class PostService {
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
     }
+    boolean canUserSeePost(Post post, Authentication auth){
+        return post.getAccess().getName().equals("PUBLIC") ||
+               post.getCreatedBy().getUsername().equals(auth.getName()) ||
+               auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+    }
     public List<PostAccess> getAllAccess(){
         return accessRepository.findAll();
     }
@@ -52,27 +57,16 @@ public class PostService {
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
-    public List<Post> getPublicPosts(){
-        PostAccess access = accessRepository.getReferenceByName("PUBLIC");
-        return postRepository.findPostsByAccess(access);
-    }
-    private List<Post> getAllPosts(String username){
-        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
-        if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
+    public List<Post> getAllPosts(Authentication auth){
+        List<Post> allPosts = this.getAllPosts();
+        if (allPosts != null) return allPosts.stream().filter(post -> this.canUserSeePost(post, auth)).collect(Collectors.toList());
         return Collections.emptyList();
     }
-    public List<Post> getAllPosts(String username, boolean canUserSeePosts){
-        List<Post> userPosts = this.getAllPosts(username);
-        if (!canUserSeePosts) userPosts = userPosts.stream().filter(post -> post.getAccess().getName().equals("PUBLIC"))
-                                                            .collect(Collectors.toList());
-        return userPosts;
-    }
-    public List<Post> getAllPosts(Authentication auth){
-        AuthUser user = userRepository.findUserByUsername(auth.getName()).orElse(null);
-        if (user != null){
 
-            return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
-        }
+    public List<Post> getAllPosts(Authentication auth, String username){
+        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
+        if (user != null) return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user).stream()
+                .filter(post -> this.canUserSeePost(post, auth)).collect(Collectors.toList());
         return Collections.emptyList();
     }
 

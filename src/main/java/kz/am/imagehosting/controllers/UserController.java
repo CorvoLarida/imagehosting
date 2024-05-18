@@ -19,15 +19,13 @@ public class UserController {
     @GetMapping(path="/users")
     private String getUsers(Model model) {
         model.addAttribute("users", userService.findAllUsers());
-        return "user/user/all_users";
+        return "user/all_users";
     }
 
     @GetMapping(path="/{username}")
     private String getUser(@PathVariable String username, Model model) {
         model.addAttribute("username", username);
-        model.addAttribute("posts", userService.findUserPosts(username));
-        model.addAttribute("collections", userService.findUserCollections(username));
-        return "user/user/user";
+        return "user/user";
     }
 
 }

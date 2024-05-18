@@ -25,7 +25,7 @@ public class Post {
     private PostAccess access;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JoinColumn(name = "created_by_id", referencedColumnName = "id")
     private AuthUser createdBy;
     private ZonedDateTime createdAt = ZonedDateTime.now();
     @ManyToMany(cascade = CascadeType.PERSIST)

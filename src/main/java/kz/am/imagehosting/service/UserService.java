@@ -28,18 +28,4 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<Post> findUserPosts(String username){
-        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
-        if (user != null){
-            return postRepository.findPostsByCreatedByOrderByCreatedAtDesc(user);
-        }
-        return Collections.emptyList();
-    }
-    public List<PostCollection> findUserCollections(String username){
-        AuthUser user = userRepository.findUserByUsername(username).orElse(null);
-        if (user != null){
-            return pcRepository.findPostCollectionsByCreatedByOrderByPostCollectionNameAsc(user);
-        }
-        return Collections.emptyList();
-    }
 }

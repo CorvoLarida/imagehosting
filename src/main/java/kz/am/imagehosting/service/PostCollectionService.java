@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostCollectionService {
@@ -53,6 +54,14 @@ public class PostCollectionService {
 
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
+    }
+    public List<Post> getAllPosts(Authentication auth){
+        return postService.getAllPosts(auth);
+    }
+    public List<Post> getCollectionPosts(Authentication auth, PostCollection pc) {
+        Set<Post> pcPosts = pc.getCollectionPosts();
+        if (pcPosts != null) return pcPosts.stream().filter(post -> postService.canUserSeePost(post, auth)).collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     public void createCollection(PostCollectionDto postCollectionDto){

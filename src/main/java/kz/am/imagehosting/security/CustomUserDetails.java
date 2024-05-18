@@ -53,7 +53,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Collections.singletonList((GrantedAuthority) () -> "ROLE_USER");
         return authUser.getUserRoles().stream()
                 .map(role -> {
                     AuthRole r = new AuthRole();

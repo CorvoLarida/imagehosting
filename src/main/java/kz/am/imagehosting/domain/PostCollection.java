@@ -24,7 +24,7 @@ public class PostCollection {
     private Set<Post> collectionPosts;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JoinColumn(name = "created_by_id", referencedColumnName = "id")
     private AuthUser createdBy;
 
     public PostCollection(){    }

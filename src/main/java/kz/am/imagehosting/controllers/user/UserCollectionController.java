@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -36,19 +37,24 @@ public class UserCollectionController {
     @GetMapping(path="")
     private String getUserCollections(@PathVariable(value="username") String username,
                                       Model model, Authentication auth) {
-        model.addAttribute("username", username);
-        model.addAttribute("collections", pcService.getAllCollections(username));
-        return "user/collection/all_collections";
+        model.addAllAttributes(Map.of(
+                "username", username,
+                "collections", pcService.getAllCollections(username)
+        ));
+        return "collection/user/all_collections";
     }
 
     @GetMapping(path="/{id}")
-    private String getUserCollection(@PathVariable(value="username") String username, @PathVariable(value="id") UUID id,
+    private String getUserCollection(@PathVariable(value="username") String username,
+                                     @PathVariable(value="id") UUID id,
                                      Model model, Authentication auth) {
         PostCollection pc = pcService.getCollectionById(id);
-        boolean canDelete = UserUtils.canDelete(auth, pc.getCreatedBy().getUsername());
-        model.addAttribute("collection", pc);
-        model.addAttribute("canDelete", canDelete);
-        return "user/collection/collection";
+        model.addAllAttributes(Map.of(
+                "collection", pc,
+                "collectionPosts", pcService.getCollectionPosts(auth, pc),
+                "canDelete", UserUtils.canSeeAllUserPosts(auth, pc.getCreatedBy().getUsername())
+        ));
+        return "collection/user/collection";
     }
     @GetMapping(path="/{id}/download")
     private void downloadUserCollection(@PathVariable String username, @PathVariable(value="id") UUID id,
@@ -65,7 +71,7 @@ public class UserCollectionController {
             for (Post post : posts) {
                 imageName = post.getImage().getImageLocation();
                 resource = new FileSystemResource(ImageUtils.getImagePath(imageName));
-                imageExt = ImageUtils.getImageExtenstion(imageName);
+                imageExt = ImageUtils.getImageExtension(imageName);
                 ZipEntry entry = new ZipEntry(String.format("%s.%s", post.getPostName(), imageExt));
                 entry.setSize(resource.contentLength());
                 zippedOut.putNextEntry(entry);
