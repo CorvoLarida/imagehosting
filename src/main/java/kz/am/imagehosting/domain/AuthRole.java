@@ -16,7 +16,7 @@ public class AuthRole implements GrantedAuthority {
     private String name;
     @ManyToMany(mappedBy = "authRoles")
     private Set<AuthUser> authUser;
-
+    public AuthRole(){}
     public String getName() {
         return name;
     }

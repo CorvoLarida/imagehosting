@@ -27,7 +27,7 @@ public class PostCollection {
     @JoinColumn(name = "created_by_id", referencedColumnName = "id")
     private AuthUser createdBy;
 
-    public PostCollection(){    }
+    public PostCollection(){}
     public UUID getId() {
         return id;
     }

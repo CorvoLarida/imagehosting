@@ -15,7 +15,7 @@
 <div th:insert="~{base :: header}"></div>
 <h1 th:text="${'Collection: ' + collection.getPostCollectionName()}"></h1>
 <div th:each="post: ${collection.getCollectionPosts()}">
-    <div th:if="${post.getAccess().getName().equals('PUBLIC')}">
+    <div th:if="${post.getAccess().getType().equals('PUBLIC')}">
         <a th:href = "@{/posts/{id}(id=${post.getId()})}"
            th:text="${post.getPostName()}"></a>
     </div>

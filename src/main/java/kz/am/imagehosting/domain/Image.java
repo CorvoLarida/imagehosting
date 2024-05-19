@@ -16,8 +16,7 @@ public class Image {
     @OneToOne(mappedBy = "image")
     private Post post;
 
-    public Image() {
-    }
+    public Image() {}
 
     public UUID getId() {
         return id;

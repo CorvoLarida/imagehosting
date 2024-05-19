@@ -43,7 +43,7 @@ public class PostService {
         this.userRepository = userRepository;
     }
     boolean canUserSeePost(Post post, Authentication auth){
-        return post.getAccess().getName().equals("PUBLIC") ||
+        return post.getAccess().getType().equals("PUBLIC") ||
                post.getCreatedBy().getUsername().equals(auth.getName()) ||
                auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
     }

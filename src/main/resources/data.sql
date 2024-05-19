@@ -1,6 +1,6 @@
 INSERT INTO auth_role (name)
 VALUES
 ('USER'), ('ADMIN');
-INSERT INTO post_access (name)
+INSERT INTO post_access (type, name)
 VALUES
-('PRIVATE'), ('PUBLIC');
+('PRIVATE', 'Private'), ('PUBLIC', 'Public');

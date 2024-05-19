@@ -12,24 +12,18 @@ public class PostAccess {
     private Integer id;
 
     @Column(unique = true)
+    private String type;
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "access")
     private Set<Post> posts;
+    public PostAccess(){}
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() {return id;}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getType() {return type;}
 
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name;}
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

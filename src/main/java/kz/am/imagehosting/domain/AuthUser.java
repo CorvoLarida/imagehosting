@@ -30,6 +30,7 @@ public class AuthUser {
             inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}
     )
     private Set<AuthRole> authRoles;
+    public AuthUser(){}
 
     public UUID getId() {
         return id;

@@ -9,7 +9,7 @@ public class UserUtils {
         return auth.getName().equals(username) || auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
     }
     public static boolean canUserAccessPost(Authentication auth, Post post){
-        if (post.getAccess().getName().equals("PUBLIC")) return true;
+        if (post.getAccess().getType().equals("PUBLIC")) return true;
         else {
             boolean isAdmin = auth.getAuthorities().stream()
                     .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
