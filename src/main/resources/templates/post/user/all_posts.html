@@ -8,7 +8,7 @@
 <body>
 <div th:insert="~{base :: header}"></div>
 
-<div sec:authorize="isAuthenticated()">
+<div>
     <h1><span th:text="${username}"></span> POSTS</h1>
 
     <span th:if="${param.postDeleted}" th:text="'post ' + ${param.postDeleted} + ' was deleted'"></span>
@@ -19,9 +19,14 @@
                                                id=${post.getId()})}"
            th:text="${post.getPostName()}"></a>
     </div>
-    <br>
-    <hr>
-    <a href="/posts/new">Create new post</a>
+
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${#authentication.getName() == username}">
+            <br>
+            <hr>
+            <a href="/posts/new">Create new post</a>
+        </div>
+    </div>
 </div>
 
 </body>

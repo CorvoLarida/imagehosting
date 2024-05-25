@@ -8,7 +8,7 @@
 <body>
 <div th:insert="~{base :: header}"></div>
 
-<div sec:authorize="isAuthenticated()">
+<div>
     <h1><span th:text="${username}"></span> COLLECTIONS</h1>
 
     <span th:if="${param.collectionDeleted}" th:text="'collection ' + ${param.collectionDeleted} + ' was deleted'"></span>
@@ -19,9 +19,14 @@
                                                      id=${collection.getId()})}"
            th:text="${collection.getPostCollectionName()}"></a>
     </div>
-    <br>
-    <hr>
-    <a href="/collections/new">Create new collection</a>
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${#authentication.getName() == username}">
+            <br>
+            <hr>
+            <a href="/collections/new">Create new collection</a>
+        </div>
+    </div>
+
 </div>
 
 </body>

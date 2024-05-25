@@ -14,7 +14,7 @@
 <body>
 <div th:insert="~{base :: header}"></div>
 
-<div sec:authorize="isAuthenticated()">
+<div>
 
     <h1 th:text="${'Post: ' + post.getPostName() + ' | by: ' + post.getCreatedBy().getUsername()}"></h1>
     <div th:if="${userHasAccess}">

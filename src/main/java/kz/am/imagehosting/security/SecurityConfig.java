@@ -3,6 +3,7 @@ package kz.am.imagehosting.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -80,14 +82,26 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/register").permitAll()
-//                        .requestMatchers("/posts/**").hasRole("USER")
-//                        .requestMatchers("/collections/**").hasRole("ADMIN")
+                .authorizeHttpRequests(authorize -> authorize.
+                        requestMatchers(
+                                AntPathRequestMatcher.antMatcher("/"),
+                                AntPathRequestMatcher.antMatcher("/images/**"),
+                                AntPathRequestMatcher.antMatcher("/register"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/posts"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/collections"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/users"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/posts"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/posts/{id}"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/posts/{id}/download"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/collections"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/collections/{id}"),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/collections/{id}/download")
+                        ).permitAll()
                         .anyRequest().authenticated()
 
                 )
+
                 .httpBasic(withDefaults())
             .formLogin(withDefaults())
 //                .formLogin((form) -> form

@@ -8,7 +8,7 @@
 <body>
 <div th:insert="~{base :: header}"></div>
 
-<div sec:authorize="isAuthenticated()">
+<div>
     <h1 th:text="${'Collection: ' + collection.getPostCollectionName() + ' | by: ' + collection.getCreatedBy().getUsername()}"></h1>
 
     <div th:if="${canDelete == true}">
@@ -27,15 +27,16 @@
                                                id=${post.getId()})}"
            th:text="${post.getPostName()}"></a>
     </div>
+    <div th:if="${#authentication.name == collection.getCreatedBy().getUsername()}">
+        <br>
+        <hr>
+        <button>
+            <a th:href="@{/collections/{id}/edit(id=${collection.getId()})}">
+                Edit collection
+            </a>
+        </button>
+    </div>
 </div>
-<div th:if="${#authentication.name == collection.getCreatedBy().getUsername()}">
-    <br>
-    <hr>
-    <button>
-        <a th:href="@{/collections/{id}/edit(id=${collection.getId()})}">
-            Edit collection
-        </a>
-    </button>
-</div>
+
 </body>
 </html>
