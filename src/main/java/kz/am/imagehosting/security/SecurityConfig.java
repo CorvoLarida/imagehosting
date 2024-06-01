@@ -99,19 +99,24 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/{username:\\w+}/collections/{id}/download")
                         ).permitAll()
                         .anyRequest().authenticated()
-
                 )
 
                 .httpBasic(withDefaults())
             .formLogin(withDefaults())
-//                .formLogin((form) -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/")
-//                        .loginProcessingUrl("/login")
-//                        .failureUrl("/login?error=true")
-//                        .permitAll()
-//                )
-                .logout(LogoutConfigurer::permitAll);
+//            .logout(LogoutConfigurer::permitAll);
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .loginProcessingUrl("/login")
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout((logout) -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/")
+                        .permitAll());
 
         return http.build();
     }

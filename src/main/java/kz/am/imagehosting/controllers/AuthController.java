@@ -1,5 +1,7 @@
 package kz.am.imagehosting.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kz.am.imagehosting.domain.AuthRole;
 import kz.am.imagehosting.domain.AuthUser;
@@ -7,7 +9,10 @@ import kz.am.imagehosting.dto.create.RegistrationDto;
 import kz.am.imagehosting.repository.RoleRepository;
 import kz.am.imagehosting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,7 +50,6 @@ public class AuthController {
     @PostMapping(path="/register")
     public String register(@Valid @ModelAttribute(value="user") RegistrationDto rdto,
                            BindingResult bindingResult, Model model) {
-        System.out.println("registering");
         AuthUser authUserAccount = userRepository.findUserByUsername(rdto.getUsername()).orElse(null);
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", rdto);
@@ -64,6 +68,15 @@ public class AuthController {
             System.out.println(authUserAccount);
             userRepository.save(authUserAccount);
             return "redirect:/?registerSuccess";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping(path="/logout")
+    private String getLogout(HttpServletRequest request, HttpServletResponse response){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/";
     }

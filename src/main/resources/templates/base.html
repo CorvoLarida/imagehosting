@@ -6,7 +6,9 @@
     <button><a href="/">Home</a></button>
     <div style="text-align: right">
         <div sec:authorize="isAuthenticated()">
-            <button><a href="/logout">Logout</a></button>
+            <form th:method="POST" th:action="@{/logout}">
+                <button type="submit">Logout</button>
+            </form>
         </div>
         <div sec:authorize="!isAuthenticated()">
             <button><a href="/login">Login</a></button>
