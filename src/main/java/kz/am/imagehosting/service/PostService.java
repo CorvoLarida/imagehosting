@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -72,10 +73,27 @@ public class PostService {
     }
 
     public void deletePost(Post post){
+        if (post == null) throw new RuntimeException("Post must not be null");
         postRepository.deleteById(post.getId());
     }
 
+    private void validatePostDto(PostDto postDto){
+        String postName = postDto.getPostName();
+        MultipartFile file = postDto.getPostImage();
+        Integer accessId = postDto.getAccessId();
+        System.out.printf("Post Name: %s", postName);
+        if (!StringUtils.hasText(postName)) {
+          throw new RuntimeException("Post must have a name");
+        }
+        if (file == null) {
+            throw new RuntimeException("Post must have an image");
+        }
+        if (accessId == null) {
+            throw new RuntimeException("Post must have a access level");
+        }
+    }
     public void savePost(PostDto postDto) {
+        validatePostDto(postDto);
         String postName = postDto.getPostName();
         MultipartFile file = postDto.getPostImage();
         Integer accessId = postDto.getAccessId();
