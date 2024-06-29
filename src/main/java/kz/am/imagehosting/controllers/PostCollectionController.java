@@ -60,7 +60,7 @@ public class PostCollectionController {
                                     RedirectAttributes redirectAttrs, Authentication auth){
         PostCollection pc = pcService.getCollectionById(id);
         String oldName = pc.getPostCollectionName();
-        pcService.updateCollection(pc, pcDto.getPostCollectionName(), pcDto.getSelectedPosts());
+        pcService.updateCollection(pc, pcDto);
         redirectAttrs.addAttribute("collectionUpdated", oldName);
         String redirectUrl = "/" + auth.getName() + "/collections";
         return "redirect:" + redirectUrl;

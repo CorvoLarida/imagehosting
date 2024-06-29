@@ -6,6 +6,7 @@ import kz.am.imagehosting.domain.PostCollection;
 import kz.am.imagehosting.dto.create.PostCollectionDto;
 import kz.am.imagehosting.repository.PostCollectionRepository;
 import kz.am.imagehosting.repository.UserRepository;
+import kz.am.imagehosting.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,6 +66,7 @@ public class PostCollectionService {
     }
 
     public void createCollection(PostCollectionDto postCollectionDto){
+        ValidateUtils.validatePostCollectionDto(postCollectionDto);
         PostCollection postCollection = new PostCollection();
         postCollection.setPostCollectionName(postCollectionDto.getPostCollectionName());
         this.setPosts(postCollection, postCollectionDto.getSelectedPosts());
@@ -74,13 +76,15 @@ public class PostCollectionService {
         postCollectionRepository.save(postCollection);
     }
 
-    public void updateCollection(PostCollection pc, String postCollectionName, UUID[] selectedPosts){
-        this.setPosts(pc, selectedPosts);
-        pc.setPostCollectionName(postCollectionName);
+    public void updateCollection(PostCollection pc, PostCollectionDto pdto){
+        ValidateUtils.validatePostCollectionDto(pdto);
+        this.setPosts(pc, pdto.getSelectedPosts());
+        pc.setPostCollectionName(pdto.getPostCollectionName());
         postCollectionRepository.save(pc);
     }
 
     public void deleteCollection(PostCollection pc){
+        if (pc == null) throw new RuntimeException("Post collection must not be null");
         postCollectionRepository.deleteById(pc.getId());
     }
 

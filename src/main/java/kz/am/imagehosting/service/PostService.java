@@ -10,6 +10,7 @@ import kz.am.imagehosting.repository.AccessRepository;
 import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import kz.am.imagehosting.repository.UserRepository;
+import kz.am.imagehosting.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -54,15 +55,15 @@ public class PostService {
     }
 
     public Post getPostById(UUID id){
-        return postRepository.findById(id).orElse(null);
+        return postRepository.getReferenceById(id);
     }
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
     }
     public List<Post> getAllPosts(Authentication auth){
         List<Post> allPosts = this.getAllPosts();
-        if (allPosts != null) return allPosts.stream().filter(post -> this.canUserSeePost(post, auth)).collect(Collectors.toList());
-        return Collections.emptyList();
+        if (!allPosts.isEmpty()) return allPosts.stream().filter(post -> this.canUserSeePost(post, auth)).collect(Collectors.toList());
+        return allPosts;
     }
 
     public List<Post> getAllPosts(Authentication auth, String username){
@@ -77,23 +78,8 @@ public class PostService {
         postRepository.deleteById(post.getId());
     }
 
-    private void validatePostDto(PostDto postDto){
-        String postName = postDto.getPostName();
-        MultipartFile file = postDto.getPostImage();
-        Integer accessId = postDto.getAccessId();
-        System.out.printf("Post Name: %s", postName);
-        if (!StringUtils.hasText(postName)) {
-          throw new RuntimeException("Post must have a name");
-        }
-        if (file == null) {
-            throw new RuntimeException("Post must have an image");
-        }
-        if (accessId == null) {
-            throw new RuntimeException("Post must have a access level");
-        }
-    }
     public void savePost(PostDto postDto) {
-        validatePostDto(postDto);
+        ValidateUtils.validatePostDto(postDto);
         String postName = postDto.getPostName();
         MultipartFile file = postDto.getPostImage();
         Integer accessId = postDto.getAccessId();
@@ -111,7 +97,7 @@ public class PostService {
         Post post = new Post();
         post.setPostName(postName);
         post.setImage(uploadedImage);
-        post.setAccess(accessRepository.findById(accessId).orElse(null));
+        post.setAccess(accessRepository.getReferenceById(accessId));
         post.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
                 ).orElse(null));
@@ -119,6 +105,7 @@ public class PostService {
     }
 
     public void updatePost(Post post, PostUpdateDto puDto){
+        ValidateUtils.validatePostUpdateDto(puDto);
         post.setPostName(puDto.getPostName());
         post.setAccess(accessRepository.getReferenceById(puDto.getAccessId()));
         postRepository.save(post);
