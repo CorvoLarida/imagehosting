@@ -16,7 +16,7 @@ public class Post {
     @NotNull
     private String postName;
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 

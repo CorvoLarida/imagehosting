@@ -55,7 +55,7 @@ public class PostService {
     }
 
     public Post getPostById(UUID id){
-        return postRepository.getReferenceById(id);
+        return postRepository.findById(id).orElse(null);
     }
     public List<Post> getAllPosts(){
         return postRepository.findAll(Sort.by("createdAt").descending());
