@@ -1,0 +1,16 @@
+services:
+  postgres:
+    container_name: "imagehosting-db"
+    image: postgres:17-alpine
+    ports:
+    - 7990:5432
+    env_file:
+      - example.env
+    restart: on-failure
+    volumes:
+      - db-data:/var/lib/postgresql/data
+ 
+
+volumes:
+  db-data:
+    driver: local

@@ -3,3 +3,4 @@ javacore*
 database/
 images/
 target/
+.vscode/
