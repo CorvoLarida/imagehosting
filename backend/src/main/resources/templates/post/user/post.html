@@ -31,7 +31,7 @@
 
         <div>
             <p th:if="${post.getImage() != null}">
-                <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" alt="Image">
+                <img class="small" th:src="${'/images/' + post.getPhotosImagePath()}" id="thumbnail" th:alt="${post.getPostName()}">
             </p>
             <p th:unless="${post.getImage()  != null}">
                 No image

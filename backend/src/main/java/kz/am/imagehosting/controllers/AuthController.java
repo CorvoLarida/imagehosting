@@ -38,13 +38,13 @@ public class AuthController {
 
     @GetMapping(path="/login")
     public String getLogin(){
-        return "/login";
+        return "login";
     }
 
     @GetMapping(path="/register")
     public String getRegister(Model model){
         model.addAttribute("user",new RegistrationDto());
-        return "/register";
+        return "register";
     }
 
     @PostMapping(path="/register")

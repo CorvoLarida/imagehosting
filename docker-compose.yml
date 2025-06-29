@@ -9,6 +9,18 @@ services:
     restart: on-failure
     volumes:
       - db-data:/var/lib/postgresql/data
+    
+  backend:
+    container_name: "imagehosting-backend"
+    build: 
+      context: backend
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - example.env
+    ports:
+      - "8899:8899"
+    volumes:
+      - ./images:/var/webapp/imagehosting/images
  
 
 volumes:
