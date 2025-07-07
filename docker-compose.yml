@@ -1,28 +1,67 @@
+x-env-file: &ENV_FILE example.env
+
+x-defaults: &defaults
+  restart: unless-stopped
+  networks:
+    - net-imgh
+  env_file:
+    - *ENV_FILE
+
 services:
   postgres:
     container_name: "imagehosting-db"
     image: postgres:17-alpine
+    <<: *defaults
     ports:
-    - 7990:5432
-    env_file:
-      - example.env
+      - "127.0.0.1:7990:5432/tcp"
     restart: on-failure
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - vol-imgh-db-data:/var/lib/postgresql/data
+    
+  minio:
+    image: "imagehosting-minio"
+    build:
+      context: .
+      dockerfile: ./s3/docker/minio.Dockerfile
+    container_name: "imagehosting-minio"
+    <<: *defaults
+    volumes:
+      - vol-imgh-minio-data:/data
+    ports:
+      - "127.0.0.1:9001:9001/tcp"
+    depends_on:
+      - postgres
+
+  minio-config:
+    image: "imagehosting-minio-config"
+    build:
+      context: .
+      dockerfile: ./s3/docker/minio-config.Dockerfile
+    container_name: "imagehosting-minio-config-dev"
+    <<: *defaults
+    restart: on-failure
+    depends_on:
+      - minio
     
   backend:
     container_name: "imagehosting-backend"
     build: 
       context: backend
       dockerfile: ./docker/Dockerfile
-    env_file:
-      - example.env
+    <<: *defaults
     ports:
       - "8899:8899"
     volumes:
       - ./images:/var/webapp/imagehosting/images
- 
+    depends_on:
+      - postgres
+      - minio
 
 volumes:
-  db-data:
+  vol-imgh-db-data:
     driver: local
+  vol-imgh-minio-data:
+    driver: local
+
+networks:
+  net-imgh:

@@ -7,22 +7,18 @@ import kz.am.imagehosting.domain.PostAccess;
 import kz.am.imagehosting.dto.create.PostDto;
 import kz.am.imagehosting.dto.update.PostUpdateDto;
 import kz.am.imagehosting.repository.AccessRepository;
-import kz.am.imagehosting.repository.ImageRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import kz.am.imagehosting.repository.UserRepository;
+import kz.am.imagehosting.service.Image.ImageService;
 import kz.am.imagehosting.utils.ValidateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -30,20 +26,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostService {
+
     private final PostRepository postRepository;
     private final AccessRepository accessRepository;
-    private final ImageRepository imageRepository;
     private final UserRepository userRepository;
-    private static final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/images";
+    private final ImageService imageService;
 
     @Autowired
-    public PostService(PostRepository postRepository, AccessRepository accessRepository, ImageRepository imageRepository,
-                       UserRepository userRepository) {
+    public PostService(PostRepository postRepository, AccessRepository accessRepository,
+                       UserRepository userRepository, ImageService imageService) {
         this.postRepository = postRepository;
         this.accessRepository = accessRepository;
-        this.imageRepository = imageRepository;
         this.userRepository = userRepository;
+        this.imageService = imageService;
     }
+
     boolean canUserSeePost(Post post, Authentication auth){
         if (post.getAccess().getType().equals("PUBLIC")) return true;
         if (auth == null) return false;
@@ -83,25 +80,20 @@ public class PostService {
         String postName = postDto.getPostName();
         MultipartFile file = postDto.getPostImage();
         Integer accessId = postDto.getAccessId();
-        StringBuilder fileNames = new StringBuilder();
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        fileNames.append(file.getOriginalFilename());
+        String key = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
         try {
-            Files.write(fileNameAndPath, file.getBytes());
+            Image uploadedImage = imageService.saveImage(file.getBytes(), key);
+            Post post = new Post();
+            post.setPostName(postName);
+            post.setImage(uploadedImage);
+            post.setAccess(accessRepository.getReferenceById(accessId));
+            post.setCreatedBy(userRepository.findUserByUsername(
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+                    ).orElse(null));
+            postRepository.save(post);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Image uploadedImage = new Image();
-        uploadedImage.setImageLocation(fileNames.toString());
-        imageRepository.save(uploadedImage);
-        Post post = new Post();
-        post.setPostName(postName);
-        post.setImage(uploadedImage);
-        post.setAccess(accessRepository.getReferenceById(accessId));
-        post.setCreatedBy(userRepository.findUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()
-                ).orElse(null));
-        postRepository.save(post);
     }
 
     public void updatePost(Post post, PostUpdateDto puDto){
