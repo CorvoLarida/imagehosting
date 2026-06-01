@@ -2,7 +2,7 @@ package kz.am.imagehosting.dto.create;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class PostDto {
+public class PostDTO {
     private String postName;
     private MultipartFile postImage;
     private Integer accessId;

@@ -1,6 +1,6 @@
 package kz.am.imagehosting.dto.update;
 
-public class PostUpdateDto {
+public class PostUpdateDTO {
     private String postName;
     private Integer accessId;
 

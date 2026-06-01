@@ -1,7 +1,7 @@
 package kz.am.imagehosting.controllers;
 
 import kz.am.imagehosting.domain.PostCollection;
-import kz.am.imagehosting.dto.create.PostCollectionDto;
+import kz.am.imagehosting.dto.create.PostCollectionDTO;
 import kz.am.imagehosting.service.PostCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,9 +30,9 @@ public class PostCollectionController {
     }
 
     @PostMapping(path="")
-    private String addCollection(PostCollectionDto postCollectionDto,
+    private String addCollection(PostCollectionDTO postCollectionDTO,
                                  Authentication auth) {
-        pcService.createCollection(postCollectionDto);
+        pcService.createCollection(postCollectionDTO);
         String username = auth.getName();
         if (username != null) return String.format("redirect:/%s/collections", username);
         return "redirect:/collections";
@@ -56,11 +56,11 @@ public class PostCollectionController {
 
     @PatchMapping(value = "/{id}")
     private String updateCollection(@PathVariable(value="id") UUID id,
-                                    PostCollectionDto pcDto,
+                                    PostCollectionDTO pcDTO,
                                     RedirectAttributes redirectAttrs, Authentication auth){
         PostCollection pc = pcService.getCollectionById(id);
         String oldName = pc.getPostCollectionName();
-        pcService.updateCollection(pc, pcDto);
+        pcService.updateCollection(pc, pcDTO);
         redirectAttrs.addAttribute("collectionUpdated", oldName);
         String redirectUrl = "/" + auth.getName() + "/collections";
         return "redirect:" + redirectUrl;

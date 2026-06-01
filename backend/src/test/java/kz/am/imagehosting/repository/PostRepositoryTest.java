@@ -4,7 +4,7 @@ import kz.am.imagehosting.domain.AuthRole;
 import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
-import kz.am.imagehosting.dto.create.PostDto;
+import kz.am.imagehosting.dto.create.PostDTO;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
@@ -112,7 +112,7 @@ class PostRepositoryTest {
         authUserAccount.setUsername("Test User");
         authUserAccount.setPassword("Test Password");
         authUserAccount.setActive(true);
-        System.out.println(authUserAccount);
+        // System.out.println(authUserAccount);
         userRepository.save(authUserAccount);
 
         Image image1 = new Image();

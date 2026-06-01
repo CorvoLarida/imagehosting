@@ -46,7 +46,7 @@ public class TestController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(file.getOriginalFilename());
+        // System.out.println(file.getOriginalFilename());
 //        imageRepository.save(new Image(fileNames.toString()));
         Image image = new Image();
         image.setImageLocation(fileNames.toString());

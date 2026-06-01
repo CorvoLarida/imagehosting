@@ -1,7 +1,7 @@
 package kz.am.imagehosting.service;
 
 import kz.am.imagehosting.domain.Post;
-import kz.am.imagehosting.dto.create.PostDto;
+import kz.am.imagehosting.dto.create.PostDTO;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -22,12 +22,12 @@ public class PostServiceTest {
 
     @Test
     void givenEmptyPostNameWhenSavePostThenThrowRuntimeException() throws IOException {
-        PostDto testPostDto = new PostDto();
+        PostDTO testPostDTO = new PostDTO();
 //        File testImageFile = new File("C:\\Users\\Alexander\\Desktop\\1\\pet\\small\\pexels-alfo-medeiros-15241238 (1).jpg");
-//        testPostDto.setPostImage(new MockMultipartFile("Test Picture", Files.newInputStream(testImageFile.toPath())));
-        testPostDto.setPostName("Ugaga");
-        testPostDto.setAccessId(2);
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.savePost(testPostDto));
+//        testPostDTO.setPostImage(new MockMultipartFile("Test Picture", Files.newInputStream(testImageFile.toPath())));
+        testPostDTO.setPostName("Ugaga");
+        testPostDTO.setAccessId(2);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> postService.savePost(testPostDTO));
         assertEquals("Post must have an image", exception.getMessage());
     }
 

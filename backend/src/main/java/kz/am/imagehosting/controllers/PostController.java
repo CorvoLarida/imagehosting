@@ -1,8 +1,8 @@
 package kz.am.imagehosting.controllers;
 
 import kz.am.imagehosting.domain.Post;
-import kz.am.imagehosting.dto.create.PostDto;
-import kz.am.imagehosting.dto.update.PostUpdateDto;
+import kz.am.imagehosting.dto.create.PostDTO;
+import kz.am.imagehosting.dto.update.PostUpdateDTO;
 import kz.am.imagehosting.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,9 +33,9 @@ public class PostController {
     }
 
     @PostMapping(path="")
-    public String addPost(@ModelAttribute("postDto") PostDto postDto,
+    public String addPost(@ModelAttribute("postDTO") PostDTO postDTO,
                           Authentication auth) {
-        postService.savePost(postDto);
+        postService.savePost(postDTO);
         String username = auth.getName();
         String redirectUrl = (username != null) ? String.format("/%s/posts", username): "/posts";
         return "redirect:" + redirectUrl;
@@ -57,11 +57,11 @@ public class PostController {
 
     @PatchMapping(value = "/{id}")
     private String updatePost(@PathVariable(value="id") UUID id,
-                              PostUpdateDto puDto,
+                              PostUpdateDTO puDTO,
                               RedirectAttributes redirectAttrs, Authentication auth){
         Post post = postService.getPostById(id);
         String oldPostName = post.getPostName();
-        postService.updatePost(post, puDto);
+        postService.updatePost(post, puDTO);
         redirectAttrs.addAttribute("postUpdated", oldPostName);
         String redirectUrl = "/" + auth.getName() + "/posts";
         return "redirect:" + redirectUrl;

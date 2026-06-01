@@ -1,6 +1,6 @@
 package kz.am.imagehosting.controllers;
 
-import kz.am.imagehosting.service.UserService;
+import kz.am.imagehosting.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class UserController {
-    private final UserService userService;
+    private final AuthUserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(AuthUserService userService) {
         this.userService = userService;
     }
 

@@ -32,7 +32,7 @@ public class ImageServiceS3 implements ImageService {
     }
 
     public Image saveImage(byte[] fileBytes, String imageLocation) {
-        System.out.println("S3 SAVE IMAGE");
+        // System.out.println("S3 SAVE IMAGE");
         try {
             String bucket = s3Config.getBucket();
             String key = imageLocation;
@@ -45,11 +45,11 @@ public class ImageServiceS3 implements ImageService {
                 RequestBody.fromBytes(fileBytes)
             );
 
-            System.out.println("putObjectResult");
-            System.out.println(putObjectResult);
+            // System.out.println("putObjectResult");
+            // System.out.println(putObjectResult);
             final URL reportUrl = s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucket).key(key).build());
-            System.out.println("reportUrl");
-            System.out.println(reportUrl.toString());
+            // System.out.println("reportUrl");
+            // System.out.println(reportUrl.toString());
 
             Image uploadedImage = new Image();
             uploadedImage.setImageLocation(key);
@@ -61,7 +61,7 @@ public class ImageServiceS3 implements ImageService {
     }
 
     public InputStream getImage(String imageLocation) {
-        System.out.println("S3 GET IMAGE");
+        // System.out.println("S3 GET IMAGE");
         String bucket = s3Config.getBucket();
         ResponseInputStream<GetObjectResponse> resp = s3Client.getObject(
             GetObjectRequest.builder()

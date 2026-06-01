@@ -1,6 +1,7 @@
 package kz.am.imagehosting.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,7 +13,7 @@ import java.nio.file.Paths;
 public class ResourceConfig implements WebMvcConfigurer {
 
     @Override
-    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(final @NonNull ResourceHandlerRegistry registry) {
         File imagesDir = new File(String.format("%s/images", System.getProperty("user.dir")));
         if (!imagesDir.exists()) imagesDir.mkdirs();
         registry.addResourceHandler("/images/**").addResourceLocations("file:images/");

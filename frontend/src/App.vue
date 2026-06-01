@@ -1,10 +1,38 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { useUserStore } from './stores/user.stores';
+import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
+import router from './router';
+import { PATHS_NOT_ALLOWED_WHEN_REGISTERED, routeHome } from './router/routes';
+
+const userStore = useUserStore();
+userStore.getSession();
+
+const {isSessionChecked, user} = storeToRefs(userStore);
+
+const route = useRoute();
+
+watch(
+    [
+        () => isSessionChecked.value,
+        () => route.path,
+    ],
+    ([isSessionChecked, path]) => {
+        if (isSessionChecked === true) {
+            // console.log("check route", path, user.value);
+            if (user.value !== null) {
+                if (PATHS_NOT_ALLOWED_WHEN_REGISTERED.includes(path)) router.push({"name": routeHome.name});
+            }
+        }
+    },
+)
+
 </script>
 
 <template>
-  <!-- <header>
+<!--   
+  <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
@@ -13,12 +41,14 @@ import HelloWorld from './components/HelloWorld.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/test-login">Test Login</RouterLink>
+        <RouterLink to="/login">Test Login</RouterLink>
       </nav>
     </div>
-  </header> -->
-
-  <RouterView />
+  </header> 
+  -->
+  <div v-if="userStore.isSessionChecked">
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>

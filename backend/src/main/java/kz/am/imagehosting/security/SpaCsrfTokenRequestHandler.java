@@ -29,8 +29,12 @@ final class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 		 * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
 		 * the CsrfToken when it is rendered in the response body.
 		 */
-		System.out.println(request.getAttribute(CsrfToken.class.getName()));
-		System.out.println(request.getAttribute("_csrf"));
+		// System.out.println("handle");
+		// System.out.print("request.getAttribute(CsrfToken.class.getName()). ");
+		// System.out.print(CsrfToken.class.getName());
+		// System.out.println(request.getAttribute(CsrfToken.class.getName()));
+		// System.out.print("request.getAttribute('_csrf'), ");
+		// System.out.println(request.getAttribute("_csrf"));
 		this.xor.handle(request, response, csrfToken);
 		/*
 		 * Render the token value to a cookie by causing the deferred token to be loaded.
@@ -40,11 +44,16 @@ final class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
 	@Override
 	public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-		System.out.println(csrfToken.getHeaderName());
-		System.out.println(csrfToken.getParameterName());
-		System.out.println(csrfToken.getToken());
+		// System.out.println("resolveCsrfTokenValue");
+		// System.out.print("csrfToken.getHeaderName(), ");
+		// System.out.println(csrfToken.getHeaderName());
+		// System.out.print("csrfToken.getParameterName(), ");
+		// System.out.println(csrfToken.getParameterName());
+		// System.out.print("csrfToken.getToken(), ");
+		// System.out.println(csrfToken.getToken());
 		String headerValue = request.getHeader(csrfToken.getHeaderName());
-		System.out.println(headerValue);
+		// System.out.print("headerValue, ");
+		// System.out.println(headerValue);
 		/*
 		 * If the request contains a request header, use CsrfTokenRequestAttributeHandler
 		 * to resolve the CsrfToken. This applies when a single-page application includes

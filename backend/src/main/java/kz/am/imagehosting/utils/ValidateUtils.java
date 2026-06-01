@@ -1,8 +1,8 @@
 package kz.am.imagehosting.utils;
 
-import kz.am.imagehosting.dto.create.PostCollectionDto;
-import kz.am.imagehosting.dto.create.PostDto;
-import kz.am.imagehosting.dto.update.PostUpdateDto;
+import kz.am.imagehosting.dto.create.PostCollectionDTO;
+import kz.am.imagehosting.dto.create.PostDTO;
+import kz.am.imagehosting.dto.update.PostUpdateDTO;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,10 +10,10 @@ import java.util.UUID;
 
 
 public class ValidateUtils {
-    public static void validatePostDto(PostDto postDto){
-        String postName = postDto.getPostName();
-        MultipartFile file = postDto.getPostImage();
-        Integer accessId = postDto.getAccessId();
+    public static void validatePostDTO(PostDTO postDTO){
+        String postName = postDTO.getPostName();
+        MultipartFile file = postDTO.getPostImage();
+        Integer accessId = postDTO.getAccessId();
         if (!StringUtils.hasText(postName)) {
             throw new RuntimeException("Post must have a name");
         }
@@ -24,9 +24,9 @@ public class ValidateUtils {
             throw new RuntimeException("Post must have a access level");
         }
     }
-    public static void validatePostUpdateDto(PostUpdateDto postUpdateDto){
-        String postName = postUpdateDto.getPostName();
-        Integer accessId = postUpdateDto.getAccessId();
+    public static void validatePostUpdateDTO(PostUpdateDTO postUpdateDTO){
+        String postName = postUpdateDTO.getPostName();
+        Integer accessId = postUpdateDTO.getAccessId();
         if (!StringUtils.hasText(postName)) {
             throw new RuntimeException("Post must have a name");
         }
@@ -35,9 +35,9 @@ public class ValidateUtils {
         }
     }
 
-    public static void validatePostCollectionDto(PostCollectionDto pcDto){
-        String postCollectionName = pcDto.getPostCollectionName();
-        UUID[] selectedPosts = pcDto.getSelectedPosts();
+    public static void validatePostCollectionDTO(PostCollectionDTO pcDTO){
+        String postCollectionName = pcDTO.getPostCollectionName();
+        UUID[] selectedPosts = pcDTO.getSelectedPosts();
         if (!StringUtils.hasText(postCollectionName)) {
             throw new RuntimeException("Post collection must have a name");
         }

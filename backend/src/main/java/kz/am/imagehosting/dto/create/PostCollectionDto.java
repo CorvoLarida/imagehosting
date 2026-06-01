@@ -2,7 +2,7 @@ package kz.am.imagehosting.dto.create;
 
 import java.util.UUID;
 
-public class PostCollectionDto {
+public class PostCollectionDTO {
     private String postCollectionName;
     private UUID[] selectedPosts;
 

@@ -5,9 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kz.am.imagehosting.domain.AuthRole;
 import kz.am.imagehosting.domain.AuthUser;
-import kz.am.imagehosting.dto.create.RegistrationDto;
+import kz.am.imagehosting.dto.create.RegistrationDTO;
 import kz.am.imagehosting.repository.RoleRepository;
 import kz.am.imagehosting.repository.UserRepository;
+import kz.am.imagehosting.service.AuthRoleService;
+import kz.am.imagehosting.service.AuthUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,14 +29,15 @@ import java.util.Set;
 @Controller
 public class AuthController {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthUserService userService;
 
     @Autowired
-    public AuthController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(
+        UserRepository userRepository,
+        AuthUserService userService
+    ) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @GetMapping(path="/login")
@@ -43,14 +47,16 @@ public class AuthController {
 
     @GetMapping(path="/register")
     public String getRegister(Model model){
-        model.addAttribute("user",new RegistrationDto());
+        model.addAttribute("registrationForm", new RegistrationDTO());
         return "register";
     }
 
     @PostMapping(path="/register")
-    public String register(@Valid @ModelAttribute(value="user") RegistrationDto rdto,
+    public String register(@Valid @ModelAttribute(value="registrationForm") RegistrationDTO rdto,
                            BindingResult bindingResult, Model model) {
+        // System.out.println("register");
         AuthUser authUserAccount = userRepository.findUserByUsername(rdto.getUsername()).orElse(null);
+        // System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", rdto);
             return "register";
@@ -58,15 +64,12 @@ public class AuthController {
         if (authUserAccount != null) {
             bindingResult.rejectValue("username", "There is a user with this username");
         } else {
-            authUserAccount = new AuthUser();
-            authUserAccount.setUsername(rdto.getUsername());
-            authUserAccount.setPassword(passwordEncoder.encode(rdto.getPassword()));
-            authUserAccount.setActive(true);
-            Set<AuthRole> roles = new HashSet<>();
-            roles.add(roleRepository.findRoleByName("USER").orElse(null));
-            authUserAccount.setUserRoles(roles);
-            System.out.println(authUserAccount);
-            userRepository.save(authUserAccount);
+            Authentication auth;
+            userService.saveUser(rdto.getUsername(), rdto.getPassword());
+
+            auth = SecurityContextHolder.getContext().getAuthentication();
+            // System.out.println(auth);
+
             return "redirect:/?registerSuccess";
         }
         return "redirect:/";

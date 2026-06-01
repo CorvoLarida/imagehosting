@@ -4,3 +4,4 @@ database/
 images/
 target/
 .vscode/
+pet/*

@@ -29,7 +29,7 @@ public class ImageServiceFile implements ImageService {
     }
 
     public Image saveImage(byte[] fileBytes, String imageLocation) {
-        System.out.println("FILE SAVE IMAGE");
+        // System.out.println("FILE SAVE IMAGE");
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, imageLocation);
         try {
             Files.write(fileNameAndPath, fileBytes);
@@ -43,7 +43,7 @@ public class ImageServiceFile implements ImageService {
     }
 
     public InputStream getImage(String imageLocation) {
-        System.out.println("FILE GET IMAGE");
+        // System.out.println("FILE GET IMAGE");
         String imageFilePath = ImageUtils.getImagePath(imageLocation);
         try {
             return new FileInputStream(imageFilePath);

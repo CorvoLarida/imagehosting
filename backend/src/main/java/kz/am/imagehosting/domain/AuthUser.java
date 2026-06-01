@@ -1,33 +1,46 @@
 package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
+import kz.am.imagehosting.json.deserializers.AuthUserDesirializer;
+import kz.am.imagehosting.json.serializers.AuthUserSerializer;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.security.core.userdetails.User;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "auth_user")
+// @JsonDeserialize(using = AuthUserDesirializer.class)
+@JsonSerialize(using = AuthUserSerializer.class)
 public class AuthUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @Column(unique = true)
     private String username;
+
     private String password;
+
     private boolean active;
+
     @Column(name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now();
+
     @OneToMany(mappedBy = "createdBy")
     private Set<Post> posts;
+
     @OneToMany(mappedBy = "createdBy")
     private Set<PostCollection> postCollections;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "auth_user_roles",
-            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}
+        name = "auth_user_roles",
+        joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}
     )
     private Set<AuthRole> authRoles;
     public AuthUser(){}

@@ -4,8 +4,8 @@ import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Image;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostAccess;
-import kz.am.imagehosting.dto.create.PostDto;
-import kz.am.imagehosting.dto.update.PostUpdateDto;
+import kz.am.imagehosting.dto.create.PostDTO;
+import kz.am.imagehosting.dto.update.PostUpdateDTO;
 import kz.am.imagehosting.repository.AccessRepository;
 import kz.am.imagehosting.repository.PostRepository;
 import kz.am.imagehosting.repository.UserRepository;
@@ -75,11 +75,11 @@ public class PostService {
         postRepository.deleteById(post.getId());
     }
 
-    public void savePost(PostDto postDto) {
-        ValidateUtils.validatePostDto(postDto);
-        String postName = postDto.getPostName();
-        MultipartFile file = postDto.getPostImage();
-        Integer accessId = postDto.getAccessId();
+    public void savePost(PostDTO postDTO) {
+        ValidateUtils.validatePostDTO(postDTO);
+        String postName = postDTO.getPostName();
+        MultipartFile file = postDTO.getPostImage();
+        Integer accessId = postDTO.getAccessId();
         String key = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
         try {
             Image uploadedImage = imageService.saveImage(file.getBytes(), key);
@@ -96,10 +96,10 @@ public class PostService {
         }
     }
 
-    public void updatePost(Post post, PostUpdateDto puDto){
-        ValidateUtils.validatePostUpdateDto(puDto);
-        post.setPostName(puDto.getPostName());
-        post.setAccess(accessRepository.getReferenceById(puDto.getAccessId()));
+    public void updatePost(Post post, PostUpdateDTO puDTO){
+        ValidateUtils.validatePostUpdateDTO(puDTO);
+        post.setPostName(puDTO.getPostName());
+        post.setAccess(accessRepository.getReferenceById(puDTO.getAccessId()));
         postRepository.save(post);
     }
 

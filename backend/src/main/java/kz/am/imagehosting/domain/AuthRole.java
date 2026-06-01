@@ -1,22 +1,36 @@
 package kz.am.imagehosting.domain;
 
 import jakarta.persistence.*;
+import kz.am.imagehosting.json.deserializers.AuthRoleDesirializer;
+
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "auth_role")
+@JsonDeserialize(using = AuthRoleDesirializer.class)
 public class AuthRole implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(unique = true)
     private String name;
+
     @ManyToMany(mappedBy = "authRoles")
     private Set<AuthUser> authUser;
+
     public AuthRole(){}
+
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

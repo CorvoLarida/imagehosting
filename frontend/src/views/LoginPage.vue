@@ -1,60 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import httpClient from '@/configs/axios';
-import { AxiosResponse } from "axios";
+import { useUserStore } from '@/stores/user.stores';
+import router from '@/router';
+import { ApiError } from '@/models/api/apiError';
+import { routeHome } from '@/router/routes';
 
-const props = defineProps({
-  error: { type: Object, },
-})
-const isLoggedOut = ref(false);
-const tResp = ref("testtestest");
 
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts: string[] = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
+const DEFAULT_API_RESPONSE = "";
+
+const tResp = ref(DEFAULT_API_RESPONSE);
+const userStore = useUserStore();
 
 async function signIn(){
     const username = (<HTMLInputElement>document.getElementById("username")).value;
     const password = (<HTMLInputElement>document.getElementById("password")).value;
-    const loginDto = {
-        "username": username,
-        "password": password,
+    const loginError: ApiError|null = await userStore.login(username, password);
+    if (loginError != null) {
+        tResp.value = loginError.detail;
     }
-    console.log(loginDto);
-    try {
-        const { data, status }: AxiosResponse<String> = await httpClient.post("/api/login",
-            loginDto,
-            {
-                headers: {
-                    "Accept": 'application/json',
-                },
-                withCredentials: true,
-            },
-        )
-        tResp.value = data;
-        console.log(data);
-        console.log(status);
-    } catch (error) {
-        console.log(error);
-        tResp.value = error.data;
-    }
-
+    else router.push({"name": routeHome.name});
 }
 
 </script>
 
 <template>
     <div class="container">
-        <p>{{ tResp }}</p>
-        <div v-if="props.error">
-            ERROR
-            <!-- <li th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error" /> -->
-        </div>
-        <div v-if="isLoggedOut == true">
-            You have been logged out.
-        </div>
         <form @submit.prevent="signIn" class="form-signin" method="post" role="form">
             <h2 class="form-signin-heading">Please sign in</h2>
             <p>
@@ -66,10 +36,11 @@ async function signIn(){
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
             </p>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            
+            <div v-if="tResp !== DEFAULT_API_RESPONSE" 
+                class="alert alert-danger mt-2 mb-2 p-2">
+                <p>{{ tResp }}</p>
+            </div>
         </form>
-        <button @click="isLoggedOut = true" class="btn btn-lg btn-primary btn-block">Logout</button>
-        
     </div>
 </template>
 

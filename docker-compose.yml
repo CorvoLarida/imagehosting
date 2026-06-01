@@ -28,6 +28,7 @@ services:
     volumes:
       - vol-imgh-minio-data:/data
     ports:
+      - "127.0.0.1:9000:9000/tcp"
       - "127.0.0.1:9001:9001/tcp"
     depends_on:
       - postgres
@@ -42,7 +43,7 @@ services:
     restart: on-failure
     depends_on:
       - minio
-    
+
   backend:
     container_name: "imagehosting-backend"
     build: 
@@ -50,7 +51,8 @@ services:
       dockerfile: ./docker/Dockerfile
     <<: *defaults
     ports:
-      - "8899:8899"
+      - "127.0.0.1:8899:8899"
+      - "127.0.0.1:55099:55099"
     volumes:
       - ./images:/var/webapp/imagehosting/images
     depends_on:

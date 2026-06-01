@@ -1,18 +1,20 @@
 package kz.am.imagehosting.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.core.serializer.support.DeserializingConverter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,25 +22,51 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kz.am.imagehosting.domain.AuthRole;
+import kz.am.imagehosting.domain.AuthUser;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsImpl;
+
+    private final DataSource dataSource;
+
+    @Value("${server.servlet.session.cookie.name}")
+    private String sessionCookieName;
+
     @Autowired
-    public SecurityConfig(UserDetailsImpl userDetailsImpl){
+    public SecurityConfig(
+        UserDetailsImpl userDetailsImpl,
+        DataSource dataSource
+    ){
         this.userDetailsImpl = userDetailsImpl;
+        this.dataSource = dataSource;
+        // System.out.println(this.dataSource.toString());
     }
+
     @Bean
     RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -51,42 +79,57 @@ public class SecurityConfig {
     }
     @Bean
     InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user1 = User.withDefaultPasswordEncoder()
-                .username("user11")
-                .password("user11")
+
+        PasswordEncoder pswEnc = passwordEncoder();
+
+        final class UserDetailsCreator {
+            UserDetails createUSER(String username) {
+                return User.builder()
+                .username(username)
+                .password(pswEnc.encode(username))
                 .roles("USER")
                 .build();
-        UserDetails user2 = User.withDefaultPasswordEncoder()
-                .username("user22")
-                .password("user22")
-                .roles("USER")
-                .build();
-        UserDetails user3 = User.withDefaultPasswordEncoder()
-                .username("user33")
-                .password("user33")
-                .roles("USER")
-                .build();
-        UserDetails admin = User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin")
+            }
+
+            UserDetails createADMIN(String username) {
+                return User.builder()
+                .username(username)
+                .password(pswEnc.encode(username))
                 .roles("ADMIN")
                 .build();
+            }
+        }
+
+        UserDetailsCreator userDetailsCreator = new UserDetailsCreator();
+        UserDetails user1 = userDetailsCreator.createUSER("user11");
+        UserDetails user2 = userDetailsCreator.createUSER("user22");
+        UserDetails user3 = userDetailsCreator.createUSER("user33");
+        UserDetails admin = userDetailsCreator.createADMIN("admin");
+
         return new InMemoryUserDetailsManager(user1, user2, user3, admin);
     }
+
     @Bean
     AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
+        UserDetailsService userDetailsService,
+        PasswordEncoder passwordEncoder
+    ) {
         DaoAuthenticationProvider inMemoryAuthProvider = new DaoAuthenticationProvider();
         inMemoryAuthProvider.setUserDetailsService(userDetailsService);
         inMemoryAuthProvider.setPasswordEncoder(passwordEncoder);
 
         DaoAuthenticationProvider formAuthProvider = new DaoAuthenticationProvider();
-        formAuthProvider.setUserDetailsService(userDetailsImpl);
+        formAuthProvider.setUserDetailsService(this.userDetailsImpl);
         formAuthProvider.setPasswordEncoder(passwordEncoder);
 
         return new ProviderManager(inMemoryAuthProvider, formAuthProvider);
     }
+
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -109,15 +152,13 @@ public class SecurityConfig {
                 // .csrf(Customizer.withDefaults())
                 .csrf((csrf) -> csrf
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())   
-				    .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                    .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                 )
-                // .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize.
                         requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/api/**")
-                        ).permitAll().
-                        requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/"),
+                                AntPathRequestMatcher.antMatcher("/api/**"),
                                 AntPathRequestMatcher.antMatcher("/images/**"),
                                 AntPathRequestMatcher.antMatcher("/register"),
                                 AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/posts"),
@@ -144,11 +185,14 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .logoutUrl("/logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/")
-                        .permitAll());
+                    .logoutUrl("/logout")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies(this.sessionCookieName)
+                    .logoutSuccessUrl("/")
+                    .permitAll()
+                )
+                ;
 
         return http.build();
     }

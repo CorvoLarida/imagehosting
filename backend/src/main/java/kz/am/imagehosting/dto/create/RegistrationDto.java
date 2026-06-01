@@ -2,22 +2,13 @@ package kz.am.imagehosting.dto.create;
 
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.UUID;
 
-public class RegistrationDto {
-    private UUID id;
+public class RegistrationDTO {
     @NotEmpty
     private String username;
     @NotEmpty
     private String password;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

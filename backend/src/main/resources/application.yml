@@ -1,0 +1,72 @@
+
+# Server
+server.port: 8899
+# logging.level.root: DEBUG
+
+
+spring:
+  profiles:
+    active: "development"
+  # Servlet
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 200MB
+  # Enable JDBC session (if using JDBC)
+  session:
+    store-type: jdbc
+    jdbc:
+      schema: classpath:session-schema.sql
+      initialize-schema: always
+  # SQL
+  sql:
+    init:
+      data-locations: classpath:init-data.sql
+      mode: always
+  # Database connection
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    show-sql: false
+    properties.hibernate.format_sql: false
+
+spring.mvc.hiddenmethod.filter.enabled: true
+
+# Session
+# Default session timeout (in seconds)
+server:
+  servlet:
+    session:
+      timeout: 86400
+# Configure session cookie
+      tracking-modes: cookie
+      cookie:
+        name: SESSION
+        http-only: true
+        secure: true
+
+# S3 storage
+cloud:
+  aws:
+    region.static: us-east-1
+    s3:
+      path-style.enabled: true
+      bucket.name: ${MINIO_STORAGE_BUCKET_NAME}
+    credentials:
+      endpoint: http://minio:9000
+      access-key: ${MINIO_ROOT_USER}
+      secret-key: ${MINIO_ROOT_PASSWORD}
+# cloud.aws.credentials.endpoint: http://localhost:9000
+# cloud.aws.credentials.access-key: user
+# cloud.aws.credentials.secret-key: password
+# cloud.aws.s3.bucket.name: bucket
+
+# Application
+app.image-service: img-service-file

@@ -3,7 +3,7 @@ package kz.am.imagehosting.service;
 import kz.am.imagehosting.domain.AuthUser;
 import kz.am.imagehosting.domain.Post;
 import kz.am.imagehosting.domain.PostCollection;
-import kz.am.imagehosting.dto.create.PostCollectionDto;
+import kz.am.imagehosting.dto.create.PostCollectionDTO;
 import kz.am.imagehosting.repository.PostCollectionRepository;
 import kz.am.imagehosting.repository.UserRepository;
 import kz.am.imagehosting.utils.ValidateUtils;
@@ -65,19 +65,19 @@ public class PostCollectionService {
         return Collections.emptyList();
     }
 
-    public void createCollection(PostCollectionDto postCollectionDto){
-        ValidateUtils.validatePostCollectionDto(postCollectionDto);
+    public void createCollection(PostCollectionDTO postCollectionDTO){
+        ValidateUtils.validatePostCollectionDTO(postCollectionDTO);
         PostCollection postCollection = new PostCollection();
-        postCollection.setPostCollectionName(postCollectionDto.getPostCollectionName());
-        this.setPosts(postCollection, postCollectionDto.getSelectedPosts());
+        postCollection.setPostCollectionName(postCollectionDTO.getPostCollectionName());
+        this.setPosts(postCollection, postCollectionDTO.getSelectedPosts());
         postCollection.setCreatedBy(userRepository.findUserByUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()
         ).orElse(null));
         postCollectionRepository.save(postCollection);
     }
 
-    public void updateCollection(PostCollection pc, PostCollectionDto pdto){
-        ValidateUtils.validatePostCollectionDto(pdto);
+    public void updateCollection(PostCollection pc, PostCollectionDTO pdto){
+        ValidateUtils.validatePostCollectionDTO(pdto);
         this.setPosts(pc, pdto.getSelectedPosts());
         pc.setPostCollectionName(pdto.getPostCollectionName());
         postCollectionRepository.save(pc);
