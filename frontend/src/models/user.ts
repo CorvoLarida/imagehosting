@@ -12,7 +12,7 @@ export class User extends DTO {
         this.roles = roles;
     }
 
-    static checkData(data: Object): boolean {
+    static checkData(data: any): boolean {
         if (data.id === undefined) return false;
         if (data.username === undefined) return false;
         const roles = data.roles;

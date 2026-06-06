@@ -41,8 +41,10 @@ import kz.am.imagehosting.domain.AuthUser;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -133,11 +135,23 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:5173");
+        String backendAllowedOrigins = System.getenv("BACKEND_ALLOWED_ORIGINS");
+        if (backendAllowedOrigins != null) {
+            String delimiter = System.getenv("BACKEND_ALLOWED_ORIGINS_DELIMITER");
+            String[] arr = backendAllowedOrigins.split(delimiter);
+            for (String origin: arr) {
+                allowedOrigins.add(origin);
+            }
+        };
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

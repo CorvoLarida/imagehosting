@@ -1,0 +1,10 @@
+server {
+    listen ${FRONTEND_PORT};
+    server_name  ${FRONTEND_DOMAIN_NAME};
+
+    location / {
+        root /var/app/imagehosting;
+        index  index.html;
+        try_files $uri $uri/ /index.html;
+    }
+}

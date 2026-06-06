@@ -1,0 +1,12 @@
+server {
+    listen ${PROXY_PORT};
+    server_name  ${FRONTEND_DOMAIN_NAME};
+
+    location / {
+        proxy_pass http://${FRONTEND_FRONTEND_DOMAIN}:${FRONTEND_PORT}/;
+    }
+
+    location /api {
+        proxy_pass http://${FRONTEND_BACKEND_DOMAIN}:${BACKEND_PORT}/;
+    }
+}

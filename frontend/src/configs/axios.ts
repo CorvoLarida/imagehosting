@@ -5,7 +5,7 @@ const CookieXSRF = "XSRF-TOKEN";
 const HeaderXSRF = "X-XSRF-TOKEN";
 
 const httpClient = axios.create({
-    baseURL: "http://localhost:8899",
+    baseURL: "http://" + import.meta.env.VITE_FRONTEND_BACKEND_CONNECTION_STRING,
     xsrfCookieName: CookieXSRF,
     xsrfHeaderName: HeaderXSRF,
 });

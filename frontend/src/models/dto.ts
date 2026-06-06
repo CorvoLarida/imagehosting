@@ -1,3 +1,3 @@
 export class DTO {
-    static checkData(data: object) {}
+    static checkData(data: any) {}
 }

@@ -1,0 +1,8 @@
+server {
+    listen ${PROXY_OLD_PORT};
+    server_name  ${FRONTEND_DOMAIN_NAME};
+
+    location / {
+        proxy_pass http://${FRONTEND_BACKEND_DOMAIN}:${BACKEND_PORT}/;
+    }
+}

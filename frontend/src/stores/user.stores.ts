@@ -36,7 +36,7 @@ export const useUserStore = defineStore("userStore", () => {
             // console.log("data", data);
             // console.log("status", status);
             return null;
-        } catch (error: unknown) {
+        } catch (error: any) {
             // console.log(error);
             const apiError: ApiError = error.response.data;
             return apiError;
@@ -65,7 +65,7 @@ export const useUserStore = defineStore("userStore", () => {
             // console.log("data", data);
             // console.log("status", status);
             return null;
-        } catch (error: unknown) {
+        } catch (error: any) {
             // console.log(error);
             // console.log(error.response.data);
             const apiError: ApiError = error.response.data;
@@ -91,10 +91,8 @@ export const useUserStore = defineStore("userStore", () => {
             // console.log(response);
             // console.log(response.data);
             return null;
-        } catch (err) {
-            // console.log(err);
-            // console.log(err.response);
-            const apiError: ApiError = err.response.data;
+        } catch (error: any) {
+            const apiError: ApiError = error.response.data;
             return apiError;
         }
     }
@@ -121,8 +119,8 @@ export const useUserStore = defineStore("userStore", () => {
                     user.value = userData;
                 }
                 // console.log(user.value);
-            } catch (err) {
-                console.error(err);
+            } catch (error: any) {
+                console.error(error);
             } finally {
                 isSessionChecked.value = true;
                 // console.log("isSessionChecked", isSessionChecked.value);

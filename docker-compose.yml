@@ -7,17 +7,20 @@ x-defaults: &defaults
   env_file:
     - *ENV_FILE
 
+x-frontend-build-args: &frontend-build-args
+  - VITE_FRONTEND_BACKEND_CONNECTION_STRING=${VITE_FRONTEND_BACKEND_CONNECTION_STRING}
+
 services:
   postgres:
     container_name: "imagehosting-db"
     image: postgres:17-alpine
     <<: *defaults
     ports:
-      - "127.0.0.1:7990:5432/tcp"
+      - "127.0.0.1:7990:${POSTGRES_PORT}/tcp"
     restart: on-failure
     volumes:
       - vol-imgh-db-data:/var/lib/postgresql/data
-    
+
   minio:
     image: "imagehosting-minio"
     build:
@@ -51,13 +54,36 @@ services:
       dockerfile: ./docker/Dockerfile
     <<: *defaults
     ports:
-      - "127.0.0.1:8899:8899"
-      - "127.0.0.1:55099:55099"
+      - "${BACKEND_OPEN_CONNECTION_STRING}"
+      - "${BACKEND_DEBUG_CONNECTION_STRING}"
     volumes:
       - ./images:/var/webapp/imagehosting/images
     depends_on:
       - postgres
       - minio
+
+  frontend:
+    container_name: "imagehosting-frontend"
+    build: 
+      context: frontend
+      dockerfile: ./docker/Dockerfile
+      args: *frontend-build-args
+    <<: *defaults
+    depends_on:
+      - backend
+
+  proxy:
+    container_name: "imagehosting-proxy"
+    build: 
+      context: proxy
+      dockerfile: ./docker/Dockerfile
+    <<: *defaults
+    ports:
+      - "${PROXY_OPEN_CONNECTION_STRING}"
+      - "${PROXY_OLD_OPEN_CONNECTION_STRING}"
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   vol-imgh-db-data:
